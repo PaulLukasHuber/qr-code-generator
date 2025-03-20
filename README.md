@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔳 QR Code Generator | QR-Code Generator
+# 🔳 QR-Code Generator
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
