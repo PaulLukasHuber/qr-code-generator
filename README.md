@@ -93,7 +93,7 @@ Contributions are welcome! Feel free to:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-<div align="right"><a href="#-qr-code-generator--qr-code-generator">Back to top ⬆️</a></div>
+<div align="right"><a href="#-qr-code-generator">Back to top ⬆️</a></div>
 </details>
 
 ---
@@ -170,7 +170,7 @@ Beiträge sind willkommen! Du kannst:
 4. Zum Branch pushen (`git push origin feature/tolle-funktion`)
 5. Einen Pull Request öffnen
 
-<div align="right"><a href="#-qr-code-generator--qr-code-generator">Zurück nach oben ⬆️</a></div>
+<div align="right"><a href="#-qr-code-generator">Zurück nach oben ⬆️</a></div>
 </details>
 
 ---
