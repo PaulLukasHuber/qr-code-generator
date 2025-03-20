@@ -10,6 +10,6 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  // Basis-URL für GitHub Pages - ersetze "qr-code-generator" mit deinem Repository-Namen
+
   base: '/qr-code-generator/',
 });

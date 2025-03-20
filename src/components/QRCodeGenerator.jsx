@@ -100,6 +100,15 @@ const QRCodeGenerator = () => {
       img.style.width = `${size}px`;
       img.style.height = `${size}px`;
       svgRef.current.appendChild(img);
+      
+      // WICHTIG: qrDataRef.current auch hier setzen
+      qrDataRef.current = {
+        svgElement: null, // Kein SVG in diesem Fall
+        dataUrl: dataUrl  // Aber wir haben die dataUrl für den PNG-Download
+      };
+      
+      setSuccessMessage('QR-Code erfolgreich generiert!');
+      setTimeout(() => setSuccessMessage(''), 2000);
       return;
     }
     
@@ -186,22 +195,63 @@ const QRCodeGenerator = () => {
   
   // Als SVG herunterladen
   const downloadSVG = () => {
-    if (!qrDataRef.current || !qrDataRef.current.svgElement) {
+    if (!qrDataRef.current) {
       setError("Kein QR-Code zum Herunterladen vorhanden.");
+      console.error("qrDataRef.current ist nicht initialisiert");
       return;
     }
     
     try {
-      const svgData = new XMLSerializer().serializeToString(qrDataRef.current.svgElement);
-      const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
-      const svgUrl = URL.createObjectURL(svgBlob);
-      const downloadLink = document.createElement('a');
-      downloadLink.href = svgUrl;
-      downloadLink.download = 'qrcode.svg';
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-      URL.revokeObjectURL(svgUrl);
+      // Wenn cornerRadius 0 ist (ohne SVG-Element), erstellen wir ein einfaches SVG
+      if (!qrDataRef.current.svgElement) {
+        if (!qrDataRef.current.dataUrl) {
+          setError("Keine QR-Code Daten vorhanden.");
+          return;
+        }
+        
+        // Erstelle ein einfaches SVG mit dem QR-Code als eingebettetes Bild
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("width", size);
+        svg.setAttribute("height", size);
+        svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        
+        const rect = document.createElementNS(svgNS, "rect");
+        rect.setAttribute("width", "100%");
+        rect.setAttribute("height", "100%");
+        rect.setAttribute("fill", bgColor);
+        svg.appendChild(rect);
+        
+        const image = document.createElementNS(svgNS, "image");
+        image.setAttribute("href", qrDataRef.current.dataUrl);
+        image.setAttribute("width", "100%");
+        image.setAttribute("height", "100%");
+        svg.appendChild(image);
+        
+        const svgData = new XMLSerializer().serializeToString(svg);
+        const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+        const svgUrl = URL.createObjectURL(svgBlob);
+        
+        const downloadLink = document.createElement('a');
+        downloadLink.href = svgUrl;
+        downloadLink.download = 'qrcode.svg';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(svgUrl);
+      } else {
+        // Originaler Code für den Fall, dass SVG-Element vorhanden ist
+        const svgData = new XMLSerializer().serializeToString(qrDataRef.current.svgElement);
+        const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+        const svgUrl = URL.createObjectURL(svgBlob);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = svgUrl;
+        downloadLink.download = 'qrcode.svg';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(svgUrl);
+      }
       
       setSuccessMessage('SVG erfolgreich heruntergeladen!');
       setTimeout(() => setSuccessMessage(''), 2000);
@@ -213,63 +263,29 @@ const QRCodeGenerator = () => {
   
   // Als PNG herunterladen
   const downloadPNG = () => {
-    if (!qrDataRef.current || !qrDataRef.current.dataUrl) {
+    if (!qrDataRef.current) {
       setError("Kein QR-Code zum Herunterladen vorhanden.");
+      console.error("qrDataRef.current ist nicht initialisiert");
+      return;
+    }
+    
+    if (!qrDataRef.current.dataUrl) {
+      setError("Keine QR-Code Daten vorhanden.");
+      console.error("qrDataRef.current.dataUrl ist nicht verfügbar");
       return;
     }
     
     try {
-      // Wenn kein Eckenradius, können wir direkt die DataURL verwenden
-      if (cornerRadius === 0) {
-        const downloadLink = document.createElement('a');
-        downloadLink.href = qrDataRef.current.dataUrl;
-        downloadLink.download = 'qrcode.png';
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-      } else {
-        // Ansonsten müssen wir das SVG in eine Canvas rendern und dann als PNG speichern
-        const canvas = document.createElement('canvas');
-        canvas.width = size;
-        canvas.height = size;
-        const ctx = canvas.getContext('2d');
-        
-        // Hintergrund zeichnen
-        ctx.fillStyle = bgColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // SVG in Canvas zeichnen
-        const img = new Image();
-        const svgData = new XMLSerializer().serializeToString(qrDataRef.current.svgElement);
-        const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
-        const url = URL.createObjectURL(svgBlob);
-        
-        img.onload = () => {
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          
-          // Als PNG herunterladen
-          const pngUrl = canvas.toDataURL('image/png');
-          const downloadLink = document.createElement('a');
-          downloadLink.href = pngUrl;
-          downloadLink.download = 'qrcode.png';
-          document.body.appendChild(downloadLink);
-          downloadLink.click();
-          document.body.removeChild(downloadLink);
-          
-          URL.revokeObjectURL(url);
-          
-          setSuccessMessage('PNG erfolgreich heruntergeladen!');
-          setTimeout(() => setSuccessMessage(''), 2000);
-        };
-        
-        img.onerror = (err) => {
-          console.error("Fehler beim Laden des SVG als Bild:", err);
-          setError("SVG konnte nicht als Bild geladen werden.");
-          URL.revokeObjectURL(url);
-        };
-        
-        img.src = url;
-      }
+      // Direkter Download der PNG, unabhängig vom cornerRadius
+      const downloadLink = document.createElement('a');
+      downloadLink.href = qrDataRef.current.dataUrl;
+      downloadLink.download = 'qrcode.png';
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      
+      setSuccessMessage('PNG erfolgreich heruntergeladen!');
+      setTimeout(() => setSuccessMessage(''), 2000);
     } catch (err) {
       console.error("Fehler beim PNG-Download:", err);
       setError("PNG konnte nicht heruntergeladen werden: " + err.message);
