@@ -177,33 +177,8 @@ Beiträge sind willkommen! Du kannst:
 
 <div align="center">
 
-## 🧩 Project Structure | Projektstruktur
-
-```
-qr-code-generator/
-├── public/
-│   └── screenshots/
-│       └── qr-code-generator.png
-├── src/
-│   ├── components/
-│   │   ├── ui/               # Shadcn UI components
-│   │   └── QRCodeGenerator.jsx
-│   ├── lib/utils.js
-│   ├── App.jsx
-│   ├── index.css
-│   └── main.jsx
-├── .gitignore
-├── index.html
-├── LICENSE
-├── package.json
-├── postcss.config.cjs
-├── README.md
-├── tailwind.config.js
-└── vite.config.js
-```
-
 ## 📄 License | Lizenz
 
-[MIT License](LICENSE) • Copyright © 2025 [Your Name](https://github.com/your-username)
+[MIT License](LICENSE) • Copyright © 2025 [Paul-Lukas Huber](https://github.com/paullukashuber)
 
 </div>
