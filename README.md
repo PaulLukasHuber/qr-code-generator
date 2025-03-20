@@ -10,14 +10,20 @@
 **EN**: Create customizable QR codes with adjustable colors, sizes, and rounded corners. Export as SVG or PNG.  
 **DE**: Erstelle anpassbare QR-Codes mit einstellbaren Farben, Größen und abgerundeten Ecken. Export als SVG oder PNG.
 
-<img src="screenshots/qr-code-generator.png" alt="QR Code Generator Screenshot" width="700px" />
+<div align="center">
+  <a href="#-english">English 🇬🇧</a> | 
+  <a href="#-deutsch">Deutsch 🇩🇪</a>
+</div>
+
+<img src="/public/screenshots/qr-code-generator.png" alt="QR Code Generator Screenshot" width="700px" />
 
 </div>
 
 ---
 
+<a id="-english"></a>
 <details open>
-<summary>English 🇬🇧</summary>
+<summary><h2>English 🇬🇧</h2></summary>
 
 ## ✨ Features
 
@@ -87,12 +93,14 @@ Contributions are welcome! Feel free to:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+<div align="right"><a href="#-qr-code-generator--qr-code-generator">Back to top ⬆️</a></div>
 </details>
 
 ---
 
+<a id="-deutsch"></a>
 <details>
-<summary>Deutsch 🇩🇪</summary>
+<summary><h2>Deutsch 🇩🇪</h2></summary>
 
 ## ✨ Funktionen
 
@@ -162,6 +170,7 @@ Beiträge sind willkommen! Du kannst:
 4. Zum Branch pushen (`git push origin feature/tolle-funktion`)
 5. Einen Pull Request öffnen
 
+<div align="right"><a href="#-qr-code-generator--qr-code-generator">Zurück nach oben ⬆️</a></div>
 </details>
 
 ---
