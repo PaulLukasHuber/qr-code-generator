@@ -10,10 +10,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Planned
 - Add ability to insert custom logos in QR code center
 - Implement additional QR code styles (dots, patterns)
-- Add predefined color schemes
 - QR code generation history
 - Adjustable error correction level
 - Direct sharing options
+
+## [1.0.2] - 2025-03-21
+
+### Added
+- Color scheme presets feature with 8 professionally designed combinations
+- Tabbed user interface for better organization of options (Content, Design, Settings)
+- Version number display in application footer
+
+### Changed
+- Improved text formatting in color scheme selection with proper hyphenation
+- Reorganized UI controls into logical groups for better user experience
+
+### Removed
+- Corner radius functionality due to technical limitations
 
 ## [1.0.1] - 2025-03-20
 

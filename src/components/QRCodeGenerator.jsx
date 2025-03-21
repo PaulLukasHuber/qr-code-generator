@@ -4,7 +4,9 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Button } from '../components/ui/button';
 import { Slider } from '../components/ui/slider';
-import { Download, RefreshCw } from 'lucide-react';
+import { Download, RefreshCw, Settings, Palette, Move, Image } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../components/ui/tabs';
+import ColorSchemeSelector from './ColorSchemeSelector';
 
 // QRCode-Bibliothek vorab importieren, um Ladeprobleme zu vermeiden
 import QRCode from 'qrcode';
@@ -15,11 +17,11 @@ const QRCodeGenerator = () => {
   const [fgColor, setFgColor] = useState('#000000');
   const [bgColor, setBgColor] = useState('#ffffff');
   const [size, setSize] = useState(200);
-  const [cornerRadius, setCornerRadius] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
   const [qrInitialized, setQrInitialized] = useState(false);
+  const [activeTab, setActiveTab] = useState('content'); // Standardtab
   
   // Ref für SVG-Container
   const svgRef = useRef(null);
@@ -86,100 +88,28 @@ const QRCodeGenerator = () => {
     }
   };
 
-  // QR-Code mit abgerundeten Ecken rendern
+  // QR-Code rendern - Vereinfachte Version ohne Eckenradius
   const renderQRCodeWithRoundedCorners = (dataUrl) => {
     if (!svgRef.current) return;
     
     // Container leeren
     svgRef.current.innerHTML = '';
     
-    if (cornerRadius === 0) {
-      // Wenn kein Radius, dann einfach das Bild anzeigen
-      const img = document.createElement('img');
-      img.src = dataUrl;
-      img.style.width = `${size}px`;
-      img.style.height = `${size}px`;
-      svgRef.current.appendChild(img);
-      
-      // WICHTIG: qrDataRef.current auch hier setzen
-      qrDataRef.current = {
-        svgElement: null, // Kein SVG in diesem Fall
-        dataUrl: dataUrl  // Aber wir haben die dataUrl für den PNG-Download
-      };
-      
-      setSuccessMessage('QR-Code erfolgreich generiert!');
-      setTimeout(() => setSuccessMessage(''), 2000);
-      return;
-    }
-    
-    // QR-Code in Canvas umwandeln für Pixelzugriff
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
-      
-      // QR-Code Daten extrahieren
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const pixelData = imageData.data;
-      
-      // QR-Code-Zellen erkennen
-      const cellSize = canvas.width / Math.sqrt(pixelData.length / 4);
-      const moduleCount = Math.floor(canvas.width / cellSize);
-      
-      // SVG erstellen
-      const svgNS = "http://www.w3.org/2000/svg";
-      const svg = document.createElementNS(svgNS, "svg");
-      svg.setAttribute("width", size);
-      svg.setAttribute("height", size);
-      svg.setAttribute("viewBox", `0 0 ${moduleCount} ${moduleCount}`);
-      
-      // Hintergrund
-      const background = document.createElementNS(svgNS, "rect");
-      background.setAttribute("width", moduleCount);
-      background.setAttribute("height", moduleCount);
-      background.setAttribute("fill", bgColor);
-      svg.appendChild(background);
-      
-      // QR-Code-Zellen
-      for (let y = 0; y < moduleCount; y++) {
-        for (let x = 0; x < moduleCount; x++) {
-          const pixelIndex = (y * cellSize * canvas.width + x * cellSize) * 4;
-          // Prüfen, ob es ein dunkles Pixel ist (QR-Code-Punkt)
-          if (pixelData[pixelIndex] < 128) {
-            const rect = document.createElementNS(svgNS, "rect");
-            rect.setAttribute("x", x);
-            rect.setAttribute("y", y);
-            rect.setAttribute("width", 1);
-            rect.setAttribute("height", 1);
-            rect.setAttribute("fill", fgColor);
-            rect.setAttribute("rx", cornerRadius / 20); // Skalierter Radius
-            rect.setAttribute("ry", cornerRadius / 20); // Skalierter Radius
-            svg.appendChild(rect);
-          }
-        }
-      }
-      
-      // SVG in den Container einfügen
-      svgRef.current.appendChild(svg);
-      
-      // QR-Code-Daten speichern für Downloads
-      qrDataRef.current = {
-        svgElement: svg,
-        dataUrl: dataUrl
-      };
-      
-      setSuccessMessage('QR-Code erfolgreich generiert!');
-      setTimeout(() => setSuccessMessage(''), 2000);
-    };
-    
-    img.onerror = () => {
-      setError("Fehler beim Laden des QR-Code-Bildes");
-    };
-    
+    // Einfach das Bild anzeigen
+    const img = document.createElement('img');
     img.src = dataUrl;
+    img.style.width = `${size}px`;
+    img.style.height = `${size}px`;
+    svgRef.current.appendChild(img);
+    
+    // QR-Code-Daten speichern für Downloads
+    qrDataRef.current = {
+      svgElement: null,
+      dataUrl: dataUrl
+    };
+    
+    setSuccessMessage('QR-Code erfolgreich generiert!');
+    setTimeout(() => setSuccessMessage(''), 2000);
   };
 
   // QR-Code bei Änderungen neu generieren
@@ -191,7 +121,14 @@ const QRCodeGenerator = () => {
     }, 300); // Debounce-Verzögerung
 
     return () => clearTimeout(timer);
-  }, [text, fgColor, bgColor, size, cornerRadius, qrInitialized]);
+  }, [text, fgColor, bgColor, size, qrInitialized]);
+  
+  // Farbschema auswählen
+  const handleSelectColorScheme = (newFgColor, newBgColor) => {
+    setFgColor(newFgColor);
+    setBgColor(newBgColor);
+    // QR-Code wird automatisch aktualisiert durch den useEffect
+  };
   
   // Als SVG herunterladen
   const downloadSVG = () => {
@@ -202,7 +139,7 @@ const QRCodeGenerator = () => {
     }
     
     try {
-      // Wenn cornerRadius 0 ist (ohne SVG-Element), erstellen wir ein einfaches SVG
+      // Da wir kein SVG-Element mehr erzeugen, erstellen wir ein einfaches SVG
       if (!qrDataRef.current.svgElement) {
         if (!qrDataRef.current.dataUrl) {
           setError("Keine QR-Code Daten vorhanden.");
@@ -300,96 +237,140 @@ const QRCodeGenerator = () => {
           <CardTitle>QR-Code Generator</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="text">Text oder URL</Label>
-            <Input 
-              id="text" 
-              value={text} 
-              onChange={(e) => setText(e.target.value)} 
-              placeholder="https://example.com"
-            />
-          </div>
+          {/* Tabs für verschiedene Einstellungskategorien */}
+          <Tabs className="w-full">
+            <TabsList>
+              <TabsTrigger 
+                active={activeTab === 'content'} 
+                onClick={() => setActiveTab('content')}
+              >
+                <Image className="w-4 h-4 mr-2" />
+                Inhalt
+              </TabsTrigger>
+              <TabsTrigger 
+                active={activeTab === 'design'} 
+                onClick={() => setActiveTab('design')}
+              >
+                <Palette className="w-4 h-4 mr-2" />
+                Design
+              </TabsTrigger>
+              <TabsTrigger 
+                active={activeTab === 'settings'} 
+                onClick={() => setActiveTab('settings')}
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Einstellungen
+              </TabsTrigger>
+            </TabsList>
+            
+            {/* Inhalt Tab */}
+            <TabsContent active={activeTab === 'content'}>
+              <div className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="text">Text oder URL</Label>
+                  <Input 
+                    id="text" 
+                    value={text} 
+                    onChange={(e) => setText(e.target.value)} 
+                    placeholder="https://example.com"
+                  />
+                </div>
+              </div>
+            </TabsContent>
+            
+            {/* Design Tab */}
+            <TabsContent active={activeTab === 'design'}>
+              <div className="space-y-6 pt-4">
+                {/* Farbschema-Auswahl (NEU) */}
+                <ColorSchemeSelector onSelectScheme={handleSelectColorScheme} />
+                
+                {/* Manuelle Farbeinstellungen */}
+                <div className="border-t pt-4">
+                  <h3 className="text-sm font-medium mb-4">Individuelle Farbeinstellungen</h3>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="fgColor">Vordergrundfarbe</Label>
+                      <div className="flex gap-2">
+                        <Input 
+                          id="fgColor" 
+                          type="color" 
+                          value={fgColor} 
+                          onChange={(e) => setFgColor(e.target.value)} 
+                          className="w-12 h-10 p-1"
+                        />
+                        <Input 
+                          value={fgColor} 
+                          onChange={(e) => setFgColor(e.target.value)} 
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="bgColor">Hintergrundfarbe</Label>
+                      <div className="flex gap-2">
+                        <Input 
+                          id="bgColor" 
+                          type="color" 
+                          value={bgColor} 
+                          onChange={(e) => setBgColor(e.target.value)} 
+                          className="w-12 h-10 p-1"
+                        />
+                        <Input 
+                          value={bgColor} 
+                          onChange={(e) => setBgColor(e.target.value)} 
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+
+              </div>
+            </TabsContent>
+            
+            {/* Einstellungen Tab */}
+            <TabsContent active={activeTab === 'settings'}>
+              <div className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="size">Größe: {size}px</Label>
+                  <Slider
+                    id="size"
+                    min={100}
+                    max={400}
+                    step={10}
+                    value={[size]}
+                    onValueChange={(value) => setSize(value[0])}
+                    className="py-4"
+                  />
+                </div>
+                
+                <div className="pt-2">
+                  <Button onClick={generateQRCode} className="w-full" disabled={loading}>
+                    <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                    Aktualisieren
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
           
-          <div className="space-y-2">
-            <Label htmlFor="fgColor">Vordergrundfarbe</Label>
-            <div className="flex gap-2">
-              <Input 
-                id="fgColor" 
-                type="color" 
-                value={fgColor} 
-                onChange={(e) => setFgColor(e.target.value)} 
-                className="w-12 h-10 p-1"
-              />
-              <Input 
-                value={fgColor} 
-                onChange={(e) => setFgColor(e.target.value)} 
-                className="flex-1"
-              />
+          {/* Download-Optionen - immer sichtbar */}
+          <div className="pt-4 border-t mt-4">
+            <div className="grid grid-cols-2 gap-2">
+              <Button onClick={downloadSVG} className="w-full" disabled={loading || !qrInitialized}>
+                <Download className="w-4 h-4 mr-2" />
+                SVG
+              </Button>
+              <Button onClick={downloadPNG} className="w-full" disabled={loading || !qrInitialized}>
+                <Download className="w-4 h-4 mr-2" />
+                PNG
+              </Button>
             </div>
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="bgColor">Hintergrundfarbe</Label>
-            <div className="flex gap-2">
-              <Input 
-                id="bgColor" 
-                type="color" 
-                value={bgColor} 
-                onChange={(e) => setBgColor(e.target.value)} 
-                className="w-12 h-10 p-1"
-              />
-              <Input 
-                value={bgColor} 
-                onChange={(e) => setBgColor(e.target.value)} 
-                className="flex-1"
-              />
-            </div>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="size">Größe: {size}px</Label>
-            <Slider
-              id="size"
-              min={100}
-              max={400}
-              step={10}
-              value={[size]}
-              onValueChange={(value) => setSize(value[0])}
-              className="py-4"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="cornerRadius">Eckenradius: {cornerRadius}</Label>
-            <Slider
-              id="cornerRadius"
-              min={0}
-              max={8}
-              step={1}
-              value={[cornerRadius]}
-              onValueChange={(value) => setCornerRadius(value[0])}
-              className="py-4"
-            />
-          </div>
-          
-          <div className="flex gap-2">
-            <Button onClick={generateQRCode} className="w-full" disabled={loading}>
-              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              Aktualisieren
-            </Button>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-2">
-            <Button onClick={downloadSVG} className="w-full" disabled={loading || !qrInitialized}>
-              <Download className="w-4 h-4 mr-2" />
-              SVG
-            </Button>
-            <Button onClick={downloadPNG} className="w-full" disabled={loading || !qrInitialized}>
-              <Download className="w-4 h-4 mr-2" />
-              PNG
-            </Button>
-          </div>
-          
+          {/* Fehlermeldungen und Erfolgsmeldungen */}
           {error && (
             <div className="p-3 rounded bg-red-50 text-red-600 text-sm">
               {error}

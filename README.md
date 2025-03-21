@@ -15,7 +15,7 @@
   <a href="#-deutsch">Deutsch 🇩🇪</a>
 </div>
 
-<img src="/public/screenshots/qr-code-generator.png" alt="QR Code Generator Screenshot" width="700px" />
+<img src="/public/images/qr-code-generator.png" alt="QR Code Generator Screenshot" width="700px" />
 
 </div>
 
