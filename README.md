@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔳 QR-Code Generator
+# QR-Code Generator
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
@@ -27,11 +27,21 @@
 
 ## ✨ Features
 
+- 📝 Pre-built templates for common QR code types:
+  - Website URLs
+  - Wi-Fi network credentials
+  - Contact information
+  - Email addresses
+  - Payment information
+  - Geographic locations
+  - Calendar events
+- 📋 Template-specific structured forms for intuitive data entry
+- 📅 User-friendly date and time picker for calendar events
 - 📱 Generate QR codes from any text or URL
 - 🎨 Fully customizable foreground and background colors
+- 🎭 Professional color scheme presets
 - 📏 Adjustable QR code size (100-400px)
 - 🔄 Real-time preview with automatic updates
-- 🔲 Unique rounded corners for QR code elements
 - 💾 Export as vector (SVG) or raster (PNG) formats
 - 📱 Responsive design for all devices
 
@@ -64,24 +74,29 @@ Open http://localhost:5173 in your browser.
 
 ## 💻 Usage
 
-1. Enter any text or URL in the input field
-2. Customize the QR code appearance:
-   - Choose foreground/background colors
+1. Select a template or enter custom text/URL in the input field
+2. For templates, fill in the specific fields provided:
+   - **Wi-Fi**: Enter network name, security type, and password
+   - **Contact**: Enter name, phone, email, and address
+   - **Calendar**: Use the date picker to select times and enter event details
+3. Customize the QR code appearance:
+   - Choose a predefined color scheme
+   - Or set custom foreground/background colors
    - Adjust size with the slider
-   - Add rounded corners with the radius slider
-3. View the real-time preview
-4. Download in your preferred format:
+4. View the real-time preview
+5. Download in your preferred format:
    - SVG for vector graphics (scalable)
    - PNG for pixel-based images
 
 ## 🔮 Future Enhancements
 
+- [x] Predefined color schemes
 - [ ] Custom logo insertion in QR code center
 - [ ] Additional QR code styles (dots, patterns)
-- [ ] Predefined color schemes
 - [ ] QR code generation history
 - [ ] Error correction level adjustment
 - [ ] Direct sharing options
+- [ ] Multiple language support
 
 ## 🤝 Contributing
 
@@ -101,14 +116,23 @@ Contributions are welcome! Feel free to:
 <a id="-deutsch"></a>
 <details>
 <summary><h2>Deutsch 🇩🇪</h2></summary>
-
 ## ✨ Funktionen
 
+- 📝 Vordefinierte Vorlagen für häufige QR-Code-Typen:
+  - Website-URLs
+  - WLAN-Zugangsdaten
+  - Kontaktinformationen
+  - E-Mail-Adressen
+  - Zahlungsinformationen
+  - Geografische Standorte
+  - Kalenderereignisse
+- 📋 Vorlagenspezifische strukturierte Formulare für intuitive Dateneingabe
+- 📅 Benutzerfreundliche Datums- und Uhrzeitauswahl für Kalenderereignisse
 - 📱 Generiere QR-Codes aus beliebigem Text oder URLs
 - 🎨 Vollständig anpassbare Vordergrund- und Hintergrundfarben
+- 🎭 Professionelle Farbschema-Voreinstellungen
 - 📏 Einstellbare QR-Code-Größe (100-400px)
 - 🔄 Echtzeit-Vorschau mit automatischer Aktualisierung
-- 🔲 Einzigartige abgerundete Ecken für QR-Code-Elemente
 - 💾 Export als Vektor- (SVG) oder Raster-Format (PNG)
 - 📱 Responsives Design für alle Geräte
 
@@ -141,24 +165,29 @@ npm run dev
 
 ## 💻 Verwendung
 
-1. Gib beliebigen Text oder eine URL in das Eingabefeld ein
-2. Passe das Erscheinungsbild des QR-Codes an:
-   - Wähle Vordergrund-/Hintergrundfarben
+1. Wähle eine Vorlage oder gib benutzerdefinierten Text/URL ins Eingabefeld ein
+2. Bei Vorlagen fülle die spezifischen Felder aus:
+   - **WLAN**: Gib Netzwerkname, Sicherheitstyp und Passwort ein
+   - **Kontakt**: Gib Name, Telefon, E-Mail und Adresse ein
+   - **Kalender**: Nutze die Datumsauswahl für Termine und gib Ereignisdetails ein
+3. Passe das Erscheinungsbild des QR-Codes an:
+   - Wähle ein vordefiniertes Farbschema
+   - Oder stelle eigene Vordergrund-/Hintergrundfarben ein
    - Stelle die Größe mit dem Schieberegler ein
-   - Füge abgerundete Ecken mit dem Radius-Schieberegler hinzu
-3. Betrachte die Echtzeit-Vorschau
-4. Lade den QR-Code in deinem bevorzugten Format herunter:
+4. Betrachte die Echtzeit-Vorschau
+5. Lade den QR-Code in deinem bevorzugten Format herunter:
    - SVG für Vektorgrafiken (skalierbar)
    - PNG für pixelbasierte Bilder
 
 ## 🔮 Zukünftige Erweiterungen
 
+- [x] Vordefinierte Farbschemata
 - [ ] Einfügen eines benutzerdefinierten Logos in die QR-Code-Mitte
 - [ ] Zusätzliche QR-Code-Stile (Punkte, Muster)
-- [ ] Vordefinierte Farbschemata
 - [ ] Verlauf der QR-Code-Generierung
 - [ ] Anpassung der Fehlerkorrekturebene
 - [ ] Direkte Freigabeoptionen
+- [ ] Mehrsprachige Unterstützung
 
 ## 🤝 Mitwirken
 

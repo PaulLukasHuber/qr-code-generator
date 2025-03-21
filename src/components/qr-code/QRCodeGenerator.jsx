@@ -1,16 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Button } from '../components/ui/button';
-import { Slider } from '../components/ui/slider';
-import { Download, RefreshCw, Settings, Palette, Move, Image } from 'lucide-react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Button } from '../ui/button';
+import { Slider } from '../ui/slider';
+import { Download, RefreshCw, Settings, Palette, Move, Image, FileCode } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
 import ColorSchemeSelector from './ColorSchemeSelector';
+import QRCodeTemplates from './QRCodeTemplates';
+import TemplateFormFields from './TemplateFormFields';
 
 // QRCode-Bibliothek vorab importieren, um Ladeprobleme zu vermeiden
 import QRCode from 'qrcode';
 
+/**
+ * QR-Code Generator Komponente
+ * 
+ * Erlaubt es Benutzern, QR-Codes zu erstellen mit verschiedenen Vorlagen,
+ * anpassbaren Farben, Größen und weiteren Optionen.
+ */
 const QRCodeGenerator = () => {
   // States für alle Einstellungen
   const [text, setText] = useState('https://example.com');
@@ -21,7 +29,8 @@ const QRCodeGenerator = () => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
   const [qrInitialized, setQrInitialized] = useState(false);
-  const [activeTab, setActiveTab] = useState('content'); // Standardtab
+  const [activeTab, setActiveTab] = useState('templates'); // Standardtab auf Templates
+  const [activeTemplateId, setActiveTemplateId] = useState(''); // ID des aktuell ausgewählten Templates
   
   // Ref für SVG-Container
   const svgRef = useRef(null);
@@ -70,7 +79,6 @@ const QRCodeGenerator = () => {
         }
         
         // Jetzt rendern wir den QR-Code mit unserem eigenen Ansatz
-        // um die Ecken abzurunden
         if (svgRef.current) {
           // QR-Code-Elemente mit abgerundeten Ecken erstellen
           renderQRCodeWithRoundedCorners(url);
@@ -107,9 +115,6 @@ const QRCodeGenerator = () => {
       svgElement: null,
       dataUrl: dataUrl
     };
-    
-    setSuccessMessage('QR-Code erfolgreich generiert!');
-    setTimeout(() => setSuccessMessage(''), 2000);
   };
 
   // QR-Code bei Änderungen neu generieren
@@ -128,6 +133,26 @@ const QRCodeGenerator = () => {
     setFgColor(newFgColor);
     setBgColor(newBgColor);
     // QR-Code wird automatisch aktualisiert durch den useEffect
+  };
+  
+  // Template auswählen
+  const handleSelectTemplate = (template) => {
+    setText(template.content);
+    setFgColor(template.fgColor);
+    setBgColor(template.bgColor);
+    setActiveTemplateId(template.id); // Template-ID speichern
+    
+    // Nach Template-Auswahl zum Content-Tab wechseln, um die Details anzupassen
+    setActiveTab('content');
+    
+    // Feedback für den Benutzer
+    setSuccessMessage(`Vorlage "${template.name}" wurde angewendet!`);
+    setTimeout(() => setSuccessMessage(''), 2000);
+  };
+  
+  // Aktualisieren des QR-Code-Inhalts aus den Formularfeldern
+  const handleContentChangeFromFields = (newContent) => {
+    setText(newContent);
   };
   
   // Als SVG herunterladen
@@ -241,6 +266,13 @@ const QRCodeGenerator = () => {
           <Tabs className="w-full">
             <TabsList>
               <TabsTrigger 
+                active={activeTab === 'templates'} 
+                onClick={() => setActiveTab('templates')}
+              >
+                <FileCode className="w-4 h-4 mr-2" />
+                Vorlagen
+              </TabsTrigger>
+              <TabsTrigger 
                 active={activeTab === 'content'} 
                 onClick={() => setActiveTab('content')}
               >
@@ -263,25 +295,61 @@ const QRCodeGenerator = () => {
               </TabsTrigger>
             </TabsList>
             
+            {/* Templates Tab */}
+            <TabsContent active={activeTab === 'templates'}>
+              <div className="space-y-4 pt-4">
+                <QRCodeTemplates onSelectTemplate={handleSelectTemplate} />
+                <div className="pt-2 mt-2 border-t">
+                  <p className="text-sm text-muted-foreground italic">
+                    Tipp: Nach der Auswahl einer Vorlage können Sie den Inhalt im "Inhalt"-Tab anpassen.
+                  </p>
+                </div>
+              </div>
+            </TabsContent>
+            
             {/* Inhalt Tab */}
             <TabsContent active={activeTab === 'content'}>
               <div className="space-y-4 pt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="text">Text oder URL</Label>
-                  <Input 
-                    id="text" 
-                    value={text} 
-                    onChange={(e) => setText(e.target.value)} 
-                    placeholder="https://example.com"
+                {activeTemplateId ? (
+                  // Strukturierte Formularfelder für Templates
+                  <TemplateFormFields 
+                    templateId={activeTemplateId} 
+                    initialContent={text}
+                    onContentChange={handleContentChangeFromFields}
                   />
-                </div>
+                ) : (
+                  // Allgemeines Textfeld für freien Text
+                  <div className="space-y-2">
+                    <Label htmlFor="text">Text oder URL</Label>
+                    <Input 
+                      id="text" 
+                      value={text} 
+                      onChange={(e) => setText(e.target.value)} 
+                      placeholder="https://example.com"
+                    />
+                  </div>
+                )}
+                
+                {activeTemplateId && (
+                  <div className="pt-2 mt-4 border-t">
+                    <Button 
+                      variant="outline" 
+                      className="w-full" 
+                      onClick={() => {
+                        setActiveTemplateId(''); // Template-Modus zurücksetzen
+                      }}
+                    >
+                      Zurück zum Freitext-Modus
+                    </Button>
+                  </div>
+                )}
               </div>
             </TabsContent>
             
             {/* Design Tab */}
             <TabsContent active={activeTab === 'design'}>
               <div className="space-y-6 pt-4">
-                {/* Farbschema-Auswahl (NEU) */}
+                {/* Farbschema-Auswahl */}
                 <ColorSchemeSelector onSelectScheme={handleSelectColorScheme} />
                 
                 {/* Manuelle Farbeinstellungen */}
@@ -325,8 +393,6 @@ const QRCodeGenerator = () => {
                     </div>
                   </div>
                 </div>
-                
-
               </div>
             </TabsContent>
             
