@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import QRCodeGenerator from './components/qr-code/QRCodeGenerator';
 
-const APP_VERSION = '1.0.2';
+const APP_VERSION = '1.1.0';
 
 function App() {
   return (

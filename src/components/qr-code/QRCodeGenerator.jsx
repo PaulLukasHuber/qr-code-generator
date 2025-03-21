@@ -301,7 +301,7 @@ const QRCodeGenerator = () => {
                 <QRCodeTemplates onSelectTemplate={handleSelectTemplate} />
                 <div className="pt-2 mt-2 border-t">
                   <p className="text-sm text-muted-foreground italic">
-                    Tipp: Nach der Auswahl einer Vorlage können Sie den Inhalt im "Inhalt"-Tab anpassen.
+                    Tipp: Nach der Auswahl einer Vorlage kannst Du den Inhalt im "Inhalt"-Tab anpassen.
                   </p>
                 </div>
               </div>
