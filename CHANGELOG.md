@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multiple language support
 - Direct sharing options
 
+## [1.1.1] - 2025-03-22
+
+### Fixed
+- QR code scaling issue at sizes larger than 340px. QR codes now maintain their proper square aspect ratio at all size settings (100-400px) (#2)
+
 ## [1.1.0] - 2025-03-21
 
 ### Added
