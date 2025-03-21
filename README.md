@@ -6,6 +6,11 @@
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
 ![Tailwind](https://img.shields.io/badge/Tailwind-3-38B2AC?logo=tailwind-css)
 ![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/paullukashuber/qr-code-generator/deploy.yml?logo=github)
+![GitHub last commit](https://img.shields.io/github/last-commit/paullukashuber/qr-code-generator)
+![GitHub issues](https://img.shields.io/github/issues/paullukashuber/qr-code-generator)
+![GitHub stars](https://img.shields.io/github/stars/paullukashuber/qr-code-generator)
+
 
 **EN**: Create customizable QR codes with adjustable colors, sizes, and rounded corners. Export as SVG or PNG.  
 **DE**: Erstelle anpassbare QR-Codes mit einstellbaren Farben, Größen und abgerundeten Ecken. Export als SVG oder PNG.
