@@ -96,19 +96,33 @@ const QRCodeGenerator = () => {
     }
   };
 
-  // QR-Code rendern - Vereinfachte Version ohne Eckenradius
+  // QR-Code rendern
   const renderQRCodeWithRoundedCorners = (dataUrl) => {
     if (!svgRef.current) return;
     
     // Container leeren
     svgRef.current.innerHTML = '';
     
-    // Einfach das Bild anzeigen
+    // Container für das Bild erstellen, um Proportionen zu wahren
+    const container = document.createElement('div');
+    container.style.width = `${size}px`;
+    container.style.height = `${size}px`;
+    container.style.maxWidth = '100%';
+    container.style.display = 'flex';
+    container.style.alignItems = 'center';
+    container.style.justifyContent = 'center';
+    
+    // Bild mit korrekten Proportionen
     const img = document.createElement('img');
     img.src = dataUrl;
+    img.style.maxWidth = '100%';
+    img.style.maxHeight = '100%';
     img.style.width = `${size}px`;
     img.style.height = `${size}px`;
-    svgRef.current.appendChild(img);
+    img.style.objectFit = 'contain'; // Ensures aspect ratio is maintained
+    
+    container.appendChild(img);
+    svgRef.current.appendChild(container);
     
     // QR-Code-Daten speichern für Downloads
     qrDataRef.current = {
@@ -464,8 +478,11 @@ const QRCodeGenerator = () => {
           ) : (
             <div 
               ref={svgRef} 
-              className="flex items-center justify-center p-4 rounded border border-gray-200 w-full min-h-52"
-              style={{ backgroundColor: bgColor }}
+              className="flex items-center justify-center p-4 rounded border border-gray-200 w-full overflow-hidden"
+              style={{ 
+                backgroundColor: bgColor,
+                minHeight: `${Math.max(208, size)}px` // Ensures container grows with QR code size
+              }}
             >
               {!qrInitialized && <p className="text-gray-400">QR-Code wird geladen...</p>}
             </div>
