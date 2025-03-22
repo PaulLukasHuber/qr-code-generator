@@ -216,7 +216,7 @@ Beiträge sind willkommen! Du kannst:
 
 <div align="center">
 
-## 📄 License | Lizenz
+## 📄 License
 
 [MIT License](LICENSE) • Copyright © 2025 [Paul-Lukas Huber](https://github.com/paullukashuber)
 
