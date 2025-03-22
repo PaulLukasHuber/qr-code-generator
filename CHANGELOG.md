@@ -14,7 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multiple language support
 - Direct sharing options
 
-## [1.1.1] - 2025-03-22
+## [1.2.0] - 2025-03-22
+
+### Added
+- Error correction level adjustment feature allowing users to select between Low (L), Medium (M), Quartile (Q), and High (H) levels
+- Visual indicator showing current error correction level in the preview
+
+## [1.1.1] - 2025-03-21
 
 ### Fixed
 - QR code scaling issue at sizes larger than 340px. QR codes now maintain their proper square aspect ratio at all size settings (100-400px) (#2)

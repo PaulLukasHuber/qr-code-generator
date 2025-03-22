@@ -4,8 +4,9 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
 import { Slider } from '../ui/slider';
-import { Download, RefreshCw, Settings, Palette, Move, Image, FileCode } from 'lucide-react';
+import { Download, RefreshCw, Settings, Palette, Move, Image, FileCode, Shield } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import ColorSchemeSelector from './ColorSchemeSelector';
 import QRCodeTemplates from './QRCodeTemplates';
 import TemplateFormFields from './TemplateFormFields';
@@ -25,6 +26,7 @@ const QRCodeGenerator = () => {
   const [fgColor, setFgColor] = useState('#000000');
   const [bgColor, setBgColor] = useState('#ffffff');
   const [size, setSize] = useState(200);
+  const [errorCorrectionLevel, setErrorCorrectionLevel] = useState('H'); // Default to High
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
@@ -63,7 +65,7 @@ const QRCodeGenerator = () => {
     try {
       // QR-Code-Daten generieren
       QRCode.toDataURL(text || 'https://example.com', {
-        errorCorrectionLevel: 'H',
+        errorCorrectionLevel: errorCorrectionLevel, // Use the selected level
         margin: 1,
         width: size,
         color: {
@@ -140,7 +142,7 @@ const QRCodeGenerator = () => {
     }, 300); // Debounce-Verzögerung
 
     return () => clearTimeout(timer);
-  }, [text, fgColor, bgColor, size, qrInitialized]);
+  }, [text, fgColor, bgColor, size, qrInitialized, errorCorrectionLevel]);
   
   // Farbschema auswählen
   const handleSelectColorScheme = (newFgColor, newBgColor) => {
@@ -470,22 +472,72 @@ const QRCodeGenerator = () => {
         <CardHeader>
           <CardTitle>Vorschau</CardTitle>
         </CardHeader>
-        <CardContent className="flex items-center justify-center min-h-64">
+        <CardContent className="flex flex-col items-center justify-center min-h-64">
           {loading ? (
             <div className="flex items-center justify-center p-8">
               <RefreshCw className="w-8 h-8 animate-spin text-gray-400" />
             </div>
           ) : (
-            <div 
-              ref={svgRef} 
-              className="flex items-center justify-center p-4 rounded border border-gray-200 w-full overflow-hidden"
-              style={{ 
-                backgroundColor: bgColor,
-                minHeight: `${Math.max(208, size)}px` // Ensures container grows with QR code size
-              }}
-            >
-              {!qrInitialized && <p className="text-gray-400">QR-Code wird geladen...</p>}
-            </div>
+            <>
+              <div 
+                ref={svgRef} 
+                className="flex items-center justify-center p-4 rounded border border-gray-200 w-full overflow-hidden"
+                style={{ 
+                  backgroundColor: bgColor,
+                  minHeight: `${Math.max(208, size)}px` // Ensures container grows with QR code size
+                }}
+              >
+                {!qrInitialized && <p className="text-gray-400">QR-Code wird geladen...</p>}
+              </div>
+              
+              {/* Enhanced Error Correction Level Card */}
+              <div className="w-full mt-3">
+                <div className="bg-gray-50 border rounded-md p-3">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Shield className={`w-5 h-5 ${
+                        errorCorrectionLevel === 'L' ? 'text-red-500' :     
+                        errorCorrectionLevel === 'M' ? 'text-yellow-500' :  
+                        errorCorrectionLevel === 'Q' ? 'text-green-400' :   
+                        'text-green-700'                                   
+                      }`} />
+                      <span className="font-medium text-sm">Fehlerkorrektur Level {errorCorrectionLevel}</span>
+                    </div>
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                      errorCorrectionLevel === 'L' ? 'bg-red-100 text-red-800' :
+                      errorCorrectionLevel === 'M' ? 'bg-yellow-100 text-yellow-800' :
+                      errorCorrectionLevel === 'Q' ? 'bg-green-100 text-green-700' :
+                      'bg-green-200 text-green-900'
+                    }`}>  
+                      {errorCorrectionLevel === 'L' ? '7%' :
+                      errorCorrectionLevel === 'M' ? '15%' :
+                      errorCorrectionLevel === 'Q' ? '25%' : '30%'}
+                    </span>
+                  </div>
+                  <p className="text-xs mt-1 text-gray-600">
+                    {errorCorrectionLevel === 'L' ? 'Geringere Fehlerkorrektur, ideal für saubere Umgebungen.' :
+                    errorCorrectionLevel === 'M' ? 'Ausgewogene Fehlerkorrektur für allgemeine Anwendungen.' :
+                    errorCorrectionLevel === 'Q' ? 'Verbesserte Fehlerkorrektur, gut für Außenbereiche.' :
+                    'Höchste Fehlerkorrektur, ideal wenn der QR-Code beschädigt werden könnte.'}
+                  </p>
+                  <div className="flex mt-2 gap-1">
+                    {['L', 'M', 'Q', 'H'].map(level => (
+                      <button
+                        key={level}
+                        className={`text-xs px-2 py-0.5 rounded ${
+                          level === errorCorrectionLevel 
+                            ? 'bg-primary text-white' 
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                        onClick={() => setErrorCorrectionLevel(level)}
+                      >
+                        {level}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

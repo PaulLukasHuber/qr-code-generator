@@ -37,7 +37,7 @@
   - Wi-Fi network credentials
   - Contact information
   - Email addresses
-  - Payment information
+  - Crypto-Wallet Adress
   - Geographic locations
   - Calendar events
 - 📋 Template-specific structured forms for intuitive data entry
@@ -46,6 +46,7 @@
 - 🎨 Fully customizable foreground and background colors
 - 🎭 Professional color scheme presets
 - 📏 Adjustable QR code size (100-400px)
+- 🛡️ Configurable error correction levels (L, M, Q, H)
 - 🔄 Real-time preview with automatic updates
 - 💾 Export as vector (SVG) or raster (PNG) formats
 - 📱 Responsive design for all devices
@@ -99,19 +100,20 @@ Open http://localhost:5173 in your browser.
 - [ ] Custom logo insertion in QR code center
 - [ ] Additional QR code styles (dots, patterns)
 - [ ] QR code generation history
-- [ ] Error correction level adjustment
+- [x] Error correction level adjustment
 - [ ] Direct sharing options
 - [ ] Multiple language support
 
 ## 🤝 Contributing
 
-Contributions are welcome! Feel free to:
+Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Make your changes
+4. Commit your changes (`git commit -m 'Add amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
 
 <div align="right"><a href="#-qr-code-generator">Back to top ⬆️</a></div>
 </details>
@@ -123,23 +125,24 @@ Contributions are welcome! Feel free to:
 <summary><h2>Deutsch 🇩🇪</h2></summary>
 ## ✨ Funktionen
 
-- 📝 Vordefinierte Vorlagen für häufige QR-Code-Typen:
+- 📝 Vorgefertigte Vorlagen für gängige QR-Code-Typen:
   - Website-URLs
-  - WLAN-Zugangsdaten
+  - Anmeldedaten für das Wi-Fi-Netzwerk
   - Kontaktinformationen
   - E-Mail-Adressen
-  - Zahlungsinformationen
+  - Krypto-Wallet-Adresse
   - Geografische Standorte
   - Kalenderereignisse
-- 📋 Vorlagenspezifische strukturierte Formulare für intuitive Dateneingabe
-- 📅 Benutzerfreundliche Datums- und Uhrzeitauswahl für Kalenderereignisse
-- 📱 Generiere QR-Codes aus beliebigem Text oder URLs
-- 🎨 Vollständig anpassbare Vordergrund- und Hintergrundfarben
+- 📋 Vorlagenspezifische strukturierte Formulare für die intuitive Dateneingabe
+- 📅 Benutzerfreundliche Datums- und Zeitauswahl für Kalenderereignisse
+- 📱 Generieren von QR-Codes aus einem beliebigen Text oder einer URL
+- 🎨 Vollständig anpassbare Vorder- und Hintergrundfarben
 - 🎭 Professionelle Farbschema-Voreinstellungen
 - 📏 Einstellbare QR-Code-Größe (100-400px)
-- 🔄 Echtzeit-Vorschau mit automatischer Aktualisierung
-- 💾 Export als Vektor- (SVG) oder Raster-Format (PNG)
-- 📱 Responsives Design für alle Geräte
+- 🛡️ Konfigurierbare Fehlerkorrekturstufen (L, M, Q, H)
+- 🔄 Echtzeit-Vorschau mit automatischen Updates
+- 💾 Export als Vektor- (SVG) oder Rasterformat (PNG)
+- 📱 Responsive Design für alle Geräte
 
 ## 🚀 Schnellstart
 
@@ -187,12 +190,12 @@ npm run dev
 ## 🔮 Zukünftige Erweiterungen
 
 - [x] Vordefinierte Farbschemata
-- [ ] Einfügen eines benutzerdefinierten Logos in die QR-Code-Mitte
-- [ ] Zusätzliche QR-Code-Stile (Punkte, Muster)
-- [ ] Verlauf der QR-Code-Generierung
-- [ ] Anpassung der Fehlerkorrekturebene
+- Benutzerdefiniertes Logo in der Mitte des QR-Codes einfügen
+- Zusätzliche QR-Code-Stile (Punkte, Muster)
+- [ ] Historie der QR-Code-Erzeugung
+- [x] Anpassung der Fehlerkorrekturstufe
 - [ ] Direkte Freigabeoptionen
-- [ ] Mehrsprachige Unterstützung
+- [ ] Unterstützung mehrerer Sprachen
 
 ## 🤝 Mitwirken
 
