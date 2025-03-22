@@ -1,17 +1,15 @@
 import React from 'react';
 import { Label } from '../ui/label';
+import { useTheme } from '@/context/ThemeContext';
 
 /**
  * Komponente zur Auswahl von Farbschemata für QR-Codes
- * 
- * Zeigt eine Reihe von vordefinierten Farbkombinationen an, die mit einem Klick
- * auf den QR-Code angewendet werden können.
- * 
- * @param {Object} props - Die Komponenten-Props
- * @param {Function} props.onSelectScheme - Callback-Funktion, die mit den ausgewählten Farben aufgerufen wird
+ * Mit Unterstützung für Dark Mode
  */
 const ColorSchemeSelector = ({ onSelectScheme }) => {
-  // Vordefinierte Farbschemata
+  const { theme } = useTheme();
+  
+  // Vordefinierte Farbschemata mit zusätzlichen Dark Mode Optionen
   const COLOR_SCHEMES = [
     { 
       name: 'Standard', 
@@ -60,17 +58,24 @@ const ColorSchemeSelector = ({ onSelectScheme }) => {
       fg: '#312E81', 
       bg: '#E0E7FF',
       description: 'Verstärkter Kontrast für bessere Lesbarkeit bei unterschiedlichen Lichtverhältnissen'
-    }
+    },
+    // New color scheme optimized for dark mode
+    { 
+      name: 'Nachtmodus', 
+      fg: '#FFFFFF', 
+      bg: '#2E3440',
+      description: 'Optimiert für dunkle Umgebungen und Dark Mode'
+    },
   ];
 
   return (
     <div className="space-y-2">
-      <Label>Farbschemata</Label>
+      <Label className="dark:text-gray-200">Farbschemata</Label>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {COLOR_SCHEMES.map((scheme, index) => (
           <div 
             key={index}
-            className="cursor-pointer rounded-md border p-2 hover:border-primary transition-colors flex flex-col h-[4.5rem]"
+            className="cursor-pointer rounded-md border dark:border-gray-700 p-2 hover:border-primary dark:hover:border-primary transition-colors flex flex-col h-[4.5rem] bg-white dark:bg-gray-800"
             onClick={() => onSelectScheme(scheme.fg, scheme.bg)}
             title={scheme.description}
           >
@@ -80,11 +85,13 @@ const ColorSchemeSelector = ({ onSelectScheme }) => {
                 style={{ backgroundColor: scheme.fg }}
               />
               <div 
-                className="w-4 h-4 rounded-full border" 
+                className="w-4 h-4 rounded-full border dark:border-gray-600" 
                 style={{ backgroundColor: scheme.bg }}
               />
             </div>
-            <span className="text-xs font-medium w-full block break-words min-h-[2rem] text-left hyphens-auto">{scheme.name}</span>
+            <span className="text-xs font-medium w-full block break-words min-h-[2rem] text-left hyphens-auto dark:text-gray-300">
+              {scheme.name}
+            </span>
           </div>
         ))}
       </div>

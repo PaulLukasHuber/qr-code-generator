@@ -14,6 +14,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multiple language support
 - Direct sharing options
 
+## [1.3.0] - 2025-03-22
+
+### Added
+- Dark mode support with automatic system preference detection
+- Theme toggle switch in the application header
+- Persistent theme preference using local storage
+- New "Night Mode" color scheme optimized for dark backgrounds
+- Automatic QR code color adjustments for better visibility in dark mode
+- Transition effects for smoother theme switching
+- Dark mode styling for all UI components and form fields
+- Accessibility improvements for theme toggle
+
+### Changed
+- Enhanced contrast and readability in both light and dark themes
+- Improved visual hierarchy in dark mode
+- Updated error and success message styling for better visibility in dark mode
+- Reorganized application header to include theme toggle
+
 ## [1.2.0] - 2025-03-22
 
 ### Added

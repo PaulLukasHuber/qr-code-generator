@@ -12,6 +12,7 @@ import { Calendar, Clock, X, ChevronLeft, ChevronRight } from 'lucide-react';
  * - Hierarchischer Monat/Jahr-Navigation
  * - Direkter Texteingabe von Datum und Zeit
  * - Vollständig angepasstem Design
+ * - Unterstützung für Dark Mode
  * 
  * @param {Object} props - Die Komponenten-Props
  * @param {string} props.id - ID des Elements
@@ -406,12 +407,12 @@ const CustomDateTimePicker = ({
   
   return (
     <div className="space-y-2 relative">
-      {label && <Label htmlFor={id}>{label}</Label>}
+      {label && <Label htmlFor={id} className="dark:text-gray-200">{label}</Label>}
       
       {/* Anzeige des ausgewählten Datums - jetzt als editierbares Eingabefeld */}
       <div 
         className={cn(
-          "flex h-10 w-full rounded-md border border-input bg-transparent text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
+          "flex h-10 w-full rounded-md border border-input bg-transparent text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 dark:border-gray-600",
           className
         )}
       >
@@ -423,12 +424,12 @@ const CustomDateTimePicker = ({
             value={displayValue}
             onChange={handleInputChange}
             placeholder="TT.MM.JJJJ HH:MM"
-            className="h-full border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="h-full border-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
             onFocus={() => setShowPicker(true)}
           />
           <button
             type="button"
-            className="absolute right-3 hover:text-primary"
+            className="absolute right-3 hover:text-primary dark:text-gray-400 dark:hover:text-gray-200"
             onClick={() => setShowPicker(!showPicker)}
           >
             <Calendar className="h-4 w-4 opacity-50" />
@@ -437,39 +438,39 @@ const CustomDateTimePicker = ({
         {displayValue && (
           <button
             type="button"
-            className="px-3 border-l border-input flex items-center hover:bg-muted"
+            className="px-3 border-l border-input dark:border-gray-600 flex items-center hover:bg-muted dark:hover:bg-gray-700"
             onClick={() => {
               onChange('');
               setDisplayValue('');
             }}
           >
-            <X className="h-4 w-4" />
+            <X className="h-4 w-4 dark:text-gray-400" />
           </button>
         )}
       </div>
       
       {helperText && (
-        <p className="text-xs text-muted-foreground">{helperText}</p>
+        <p className="text-xs text-muted-foreground dark:text-gray-400">{helperText}</p>
       )}
       
       {/* Datum/Zeit-Picker Dropdown */}
       {showPicker && (
         <div 
           ref={pickerRef}
-          className="absolute z-50 mt-1 bg-background border rounded-md shadow-lg p-3 w-full sm:w-96"
+          className="absolute z-50 mt-1 bg-background dark:bg-gray-800 border dark:border-gray-700 rounded-md shadow-lg p-3 w-full sm:w-96"
         >
           {/* Tabs */}
-          <div className="flex border-b mb-2">
+          <div className="flex border-b dark:border-gray-700 mb-2">
             <button
               type="button"
-              className={`pb-2 px-3 ${activeTab === 'date' ? 'border-b-2 border-primary font-medium' : 'text-muted-foreground'}`}
+              className={`pb-2 px-3 ${activeTab === 'date' ? 'border-b-2 border-primary font-medium dark:text-white' : 'text-muted-foreground dark:text-gray-400'}`}
               onClick={() => setActiveTab('date')}
             >
               Datum
             </button>
             <button
               type="button"
-              className={`pb-2 px-3 ${activeTab === 'time' ? 'border-b-2 border-primary font-medium' : 'text-muted-foreground'}`}
+              className={`pb-2 px-3 ${activeTab === 'time' ? 'border-b-2 border-primary font-medium dark:text-white' : 'text-muted-foreground dark:text-gray-400'}`}
               onClick={() => setActiveTab('time')}
             >
               Uhrzeit
@@ -486,7 +487,7 @@ const CustomDateTimePicker = ({
                   <div className="flex justify-between items-center mb-2">
                     <button
                       type="button"
-                      className="p-1 hover:bg-muted rounded-md"
+                      className="p-1 hover:bg-muted dark:hover:bg-gray-700 dark:text-gray-300 rounded-md"
                       onClick={() => changeMonth(-1)}
                     >
                       <ChevronLeft className="h-4 w-4" />
@@ -495,7 +496,7 @@ const CustomDateTimePicker = ({
                     {/* Klickbarer Monat/Jahr-Header */}
                     <button
                       type="button"
-                      className="font-medium hover:text-primary"
+                      className="font-medium hover:text-primary dark:text-gray-200 dark:hover:text-primary"
                       onClick={() => setViewMode('months')}
                     >
                       {monthNames[currentMonth]} {currentYear}
@@ -503,7 +504,7 @@ const CustomDateTimePicker = ({
                     
                     <button
                       type="button"
-                      className="p-1 hover:bg-muted rounded-md"
+                      className="p-1 hover:bg-muted dark:hover:bg-gray-700 dark:text-gray-300 rounded-md"
                       onClick={() => changeMonth(1)}
                     >
                       <ChevronRight className="h-4 w-4" />
@@ -513,7 +514,7 @@ const CustomDateTimePicker = ({
                   {/* Wochentage */}
                   <div className="grid grid-cols-7 gap-1 mb-1">
                     {weekdays.map((day) => (
-                      <div key={day} className="text-center text-xs font-medium text-muted-foreground py-1">
+                      <div key={day} className="text-center text-xs font-medium text-muted-foreground dark:text-gray-400 py-1">
                         {day}
                       </div>
                     ))}
@@ -526,10 +527,11 @@ const CustomDateTimePicker = ({
                         key={index}
                         type="button"
                         className={cn(
-                          "w-full aspect-square flex items-center justify-center text-sm rounded-full hover:bg-muted",
+                          "w-full aspect-square flex items-center justify-center text-sm rounded-full hover:bg-muted dark:hover:bg-gray-700",
                           !day.isCurrentMonth && "text-muted-foreground opacity-50",
                           isToday(day) && "border border-primary",
-                          isSelected(day) && "bg-primary text-primary-foreground hover:bg-primary/90"
+                          isSelected(day) && "bg-primary text-primary-foreground dark:text-white hover:bg-primary/90",
+                          day.isCurrentMonth && !isSelected(day) && "dark:text-gray-300"
                         )}
                         onClick={() => selectDay(day)}
                       >
@@ -547,7 +549,7 @@ const CustomDateTimePicker = ({
                   <div className="flex justify-between items-center mb-4">
                     <button
                       type="button"
-                      className="p-1 hover:bg-muted rounded-md"
+                      className="p-1 hover:bg-muted dark:hover:bg-gray-700 dark:text-gray-300 rounded-md"
                       onClick={() => changeYear(-1)}
                     >
                       <ChevronLeft className="h-4 w-4" />
@@ -556,7 +558,7 @@ const CustomDateTimePicker = ({
                     {/* Klickbares Jahr */}
                     <button
                       type="button"
-                      className="font-medium hover:text-primary"
+                      className="font-medium hover:text-primary dark:text-gray-200 dark:hover:text-primary"
                       onClick={() => setViewMode('years')}
                     >
                       {currentYear}
@@ -564,7 +566,7 @@ const CustomDateTimePicker = ({
                     
                     <button
                       type="button"
-                      className="p-1 hover:bg-muted rounded-md"
+                      className="p-1 hover:bg-muted dark:hover:bg-gray-700 dark:text-gray-300 rounded-md"
                       onClick={() => changeYear(1)}
                     >
                       <ChevronRight className="h-4 w-4" />
@@ -578,8 +580,8 @@ const CustomDateTimePicker = ({
                         key={month}
                         type="button"
                         className={cn(
-                          "py-2 rounded-md hover:bg-muted text-sm",
-                          currentMonth === index && selectedDate.getFullYear() === currentYear && "bg-primary text-primary-foreground hover:bg-primary/90"
+                          "py-2 rounded-md hover:bg-muted dark:hover:bg-gray-700 text-sm dark:text-gray-300",
+                          currentMonth === index && selectedDate.getFullYear() === currentYear && "bg-primary text-primary-foreground dark:text-white hover:bg-primary/90"
                         )}
                         onClick={() => selectMonth(index)}
                       >
@@ -597,19 +599,19 @@ const CustomDateTimePicker = ({
                   <div className="flex justify-between items-center mb-4">
                     <button
                       type="button"
-                      className="p-1 hover:bg-muted rounded-md"
+                      className="p-1 hover:bg-muted dark:hover:bg-gray-700 dark:text-gray-300 rounded-md"
                       onClick={() => setCurrentYear(currentYear - 12)}
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </button>
                     
-                    <span className="font-medium">
+                    <span className="font-medium dark:text-gray-200">
                       {yearsRange[0]} - {yearsRange[yearsRange.length - 1]}
                     </span>
                     
                     <button
                       type="button"
-                      className="p-1 hover:bg-muted rounded-md"
+                      className="p-1 hover:bg-muted dark:hover:bg-gray-700 dark:text-gray-300 rounded-md"
                       onClick={() => setCurrentYear(currentYear + 12)}
                     >
                       <ChevronRight className="h-4 w-4" />
@@ -623,8 +625,8 @@ const CustomDateTimePicker = ({
                         key={year}
                         type="button"
                         className={cn(
-                          "py-2 rounded-md hover:bg-muted text-sm",
-                          selectedDate.getFullYear() === year && "bg-primary text-primary-foreground hover:bg-primary/90"
+                          "py-2 rounded-md hover:bg-muted dark:hover:bg-gray-700 text-sm dark:text-gray-300",
+                          selectedDate.getFullYear() === year && "bg-primary text-primary-foreground dark:text-white hover:bg-primary/90"
                         )}
                         onClick={() => selectYear(year)}
                       >
@@ -646,15 +648,15 @@ const CustomDateTimePicker = ({
                   type="text"
                   value={hours}
                   onChange={updateHours}
-                  className="w-16 text-center text-lg"
+                  className="w-16 text-center text-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                   maxLength={2}
                 />
-                <span className="text-xl">:</span>
+                <span className="text-xl dark:text-gray-200">:</span>
                 <Input
                   type="text"
                   value={minutes}
                   onChange={updateMinutes}
-                  className="w-16 text-center text-lg"
+                  className="w-16 text-center text-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                   maxLength={2}
                 />
               </div>
@@ -666,8 +668,8 @@ const CustomDateTimePicker = ({
                     key={option.label}
                     type="button"
                     className={cn(
-                      "p-2 text-sm border rounded-md hover:bg-muted",
-                      hours === option.hours && minutes === option.minutes && "bg-primary text-primary-foreground hover:bg-primary/90"
+                      "p-2 text-sm border rounded-md hover:bg-muted dark:border-gray-600 dark:hover:bg-gray-700 dark:text-gray-300",
+                      hours === option.hours && minutes === option.minutes && "bg-primary text-primary-foreground dark:text-white hover:bg-primary/90"
                     )}
                     onClick={() => selectQuickTime(option)}
                   >
@@ -679,12 +681,13 @@ const CustomDateTimePicker = ({
           )}
           
           {/* Aktionsschaltflächen */}
-          <div className="flex justify-end space-x-2 mt-4 pt-2 border-t">
+          <div className="flex justify-end space-x-2 mt-4 pt-2 border-t dark:border-gray-700">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={() => setShowPicker(false)}
+              className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600"
             >
               Abbrechen
             </Button>

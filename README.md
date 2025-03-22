@@ -12,8 +12,8 @@
 ![GitHub stars](https://img.shields.io/github/stars/paullukashuber/qr-code-generator)
 
 
-**EN**: Create customizable QR codes with adjustable colors, sizes, and rounded corners. Export as SVG or PNG.  
-**DE**: Erstelle anpassbare QR-Codes mit einstellbaren Farben, Größen und abgerundeten Ecken. Export als SVG oder PNG.
+**EN**: Create customizable QR codes with adjustable colors, sizes. Export as SVG or PNG.  
+**DE**: Erstelle anpassbare QR-Codes mit einstellbaren Farben, Größen. Exportieren Sie als SVG oder PNG.
 
 <div align="center">
   <a href="#-english">English 🇬🇧</a> | 
@@ -45,6 +45,7 @@
 - 📱 Generate QR codes from any text or URL
 - 🎨 Fully customizable foreground and background colors
 - 🎭 Professional color scheme presets
+- 🌓 Dark Mode support with system preference detection
 - 📏 Adjustable QR code size (100-400px)
 - 🛡️ Configurable error correction levels (L, M, Q, H)
 - 🔄 Real-time preview with automatic updates
@@ -138,6 +139,7 @@ Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md) 
 - 📱 Generieren von QR-Codes aus einem beliebigen Text oder einer URL
 - 🎨 Vollständig anpassbare Vorder- und Hintergrundfarben
 - 🎭 Professionelle Farbschema-Voreinstellungen
+- 🌓 Unterstützung des dunklen Modus mit Erkennung der Systemeinstellungen
 - 📏 Einstellbare QR-Code-Größe (100-400px)
 - 🛡️ Konfigurierbare Fehlerkorrekturstufen (L, M, Q, H)
 - 🔄 Echtzeit-Vorschau mit automatischen Updates

@@ -4,14 +4,7 @@ import { Card } from '../ui/card';
 import { Smartphone, Wifi, Mail, Link, CreditCard, MapPin, Calendar } from 'lucide-react';
 
 /**
- * QR-Code Vorlagen Komponente mit einheitlichem Schwarz-Weiß-Design
- * 
- * Zeigt verschiedene vordefinierte QR-Code Vorlagen für typische Anwendungsfälle an.
- * Jede Vorlage enthält Beispielinhalte und Farbschemata, die beim Auswählen
- * auf den QR-Code angewendet werden.
- *
- * @param {Object} props - Die Komponenten-Props
- * @param {Function} props.onSelectTemplate - Callback-Funktion, die aufgerufen wird, wenn ein Template ausgewählt wird
+ * QR-Code Vorlagen Komponente mit Unterstützung für Dark Mode
  */
 const QRCodeTemplates = ({ onSelectTemplate }) => {
   // Define QR code templates
@@ -83,8 +76,8 @@ const QRCodeTemplates = ({ onSelectTemplate }) => {
 
   return (
     <div className="space-y-4">
-      <Label className="text-base">QR-Code Vorlagen</Label>
-      <p className="text-sm text-muted-foreground mb-4">
+      <Label className="text-base dark:text-gray-200">QR-Code Vorlagen</Label>
+      <p className="text-sm text-muted-foreground dark:text-gray-400 mb-4">
         Wähle eine Vorlage für häufig verwendete QR-Code-Anwendungsfälle
       </p>
       
@@ -92,18 +85,18 @@ const QRCodeTemplates = ({ onSelectTemplate }) => {
         {QR_TEMPLATES.map((template) => (
           <Card 
             key={template.id}
-            className="cursor-pointer transition-all duration-200 hover:shadow-md relative group border p-4"
+            className="cursor-pointer transition-all duration-200 hover:shadow-md relative group border dark:border-gray-700 p-4 dark:bg-gray-800"
             onClick={() => onSelectTemplate(template)}
           >
             <div className="flex flex-col items-center">
-              <div className="w-10 h-10 flex items-center justify-center rounded-md bg-gray-100 text-gray-800 mb-3">
+              <div className="w-10 h-10 flex items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 mb-3">
                 {React.cloneElement(template.icon, { size: 20 })}
               </div>
               
-              <div className="text-center font-medium mb-2 break-words hyphens-auto">{template.name}</div>
+              <div className="text-center font-medium mb-2 break-words hyphens-auto dark:text-gray-300">{template.name}</div>
             </div>
             
-            <div className="absolute inset-0 bg-white dark:bg-gray-800 opacity-0 group-hover:opacity-95 transition-opacity duration-200 flex items-center justify-center p-4 rounded-md">
+            <div className="absolute inset-0 bg-white dark:bg-gray-800 opacity-0 group-hover:opacity-95 transition-opacity duration-200 flex items-center justify-center p-4 rounded-md dark:text-gray-300">
               <p className="text-xs text-center">{template.description}</p>
             </div>
           </Card>

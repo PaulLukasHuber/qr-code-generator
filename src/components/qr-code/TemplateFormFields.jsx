@@ -7,6 +7,7 @@ import { CustomDateTimePicker } from '../ui/custom-date-time-picker';
 /**
  * Komponente für dynamische Formularfelder basierend auf QR-Code Vorlagen.
  * Zeigt unterschiedliche Eingabefelder je nach ausgewähltem Template an.
+ * Mit Unterstützung für Dark Mode.
  * 
  * @param {Object} props - Komponenten-Props
  * @param {string} props.templateId - ID des ausgewählten Templates
@@ -202,12 +203,13 @@ END:VEVENT`;
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="website-url">Website URL</Label>
+              <Label htmlFor="website-url" className="dark:text-gray-200">Website URL</Label>
               <Input 
                 id="website-url"
                 value={formFields.url || ''}
                 onChange={(e) => handleFieldChange('url', e.target.value)}
                 placeholder="https://example.com"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
           </div>
@@ -217,40 +219,42 @@ END:VEVENT`;
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="wifi-ssid">Netzwerkname (SSID)</Label>
+              <Label htmlFor="wifi-ssid" className="dark:text-gray-200">Netzwerkname (SSID)</Label>
               <Input 
                 id="wifi-ssid"
                 value={formFields.ssid || ''}
                 onChange={(e) => handleFieldChange('ssid', e.target.value)}
                 placeholder="WLAN-Netzwerkname"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="wifi-security">Sicherheitstyp</Label>
+              <Label htmlFor="wifi-security" className="dark:text-gray-200">Sicherheitstyp</Label>
               <Select 
                 value={formFields.security || 'WPA'} 
                 onValueChange={(value) => handleFieldChange('security', value)}
               >
-                <SelectTrigger id="wifi-security">
+                <SelectTrigger id="wifi-security" className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
                   <SelectValue placeholder="Sicherheitstyp wählen" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="WPA">WPA/WPA2/WPA3</SelectItem>
-                  <SelectItem value="WEP">WEP</SelectItem>
-                  <SelectItem value="nopass">Kein Passwort</SelectItem>
+                <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
+                  <SelectItem value="WPA" className="dark:text-gray-200 dark:focus:bg-gray-700">WPA/WPA2/WPA3</SelectItem>
+                  <SelectItem value="WEP" className="dark:text-gray-200 dark:focus:bg-gray-700">WEP</SelectItem>
+                  <SelectItem value="nopass" className="dark:text-gray-200 dark:focus:bg-gray-700">Kein Passwort</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="wifi-password">Passwort</Label>
+              <Label htmlFor="wifi-password" className="dark:text-gray-200">Passwort</Label>
               <Input 
                 id="wifi-password"
                 type="password"
                 value={formFields.password || ''}
                 onChange={(e) => handleFieldChange('password', e.target.value)}
                 placeholder="WLAN-Passwort"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
           </div>
@@ -260,42 +264,46 @@ END:VEVENT`;
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="contact-name">Name</Label>
+              <Label htmlFor="contact-name" className="dark:text-gray-200">Name</Label>
               <Input 
                 id="contact-name"
                 value={formFields.name || ''}
                 onChange={(e) => handleFieldChange('name', e.target.value)}
                 placeholder="Max Mustermann"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="contact-phone">Telefonnummer</Label>
+              <Label htmlFor="contact-phone" className="dark:text-gray-200">Telefonnummer</Label>
               <Input 
                 id="contact-phone"
                 value={formFields.phone || ''}
                 onChange={(e) => handleFieldChange('phone', e.target.value)}
                 placeholder="+49 123 4567890"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="contact-email">E-Mail</Label>
+              <Label htmlFor="contact-email" className="dark:text-gray-200">E-Mail</Label>
               <Input 
                 id="contact-email"
                 value={formFields.email || ''}
                 onChange={(e) => handleFieldChange('email', e.target.value)}
                 placeholder="beispiel@email.de"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="contact-address">Adresse</Label>
+              <Label htmlFor="contact-address" className="dark:text-gray-200">Adresse</Label>
               <Input 
                 id="contact-address"
                 value={formFields.address || ''}
                 onChange={(e) => handleFieldChange('address', e.target.value)}
                 placeholder="Musterstraße 123, 12345 Berlin"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
           </div>
@@ -305,22 +313,24 @@ END:VEVENT`;
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email-address">E-Mail-Adresse</Label>
+              <Label htmlFor="email-address" className="dark:text-gray-200">E-Mail-Adresse</Label>
               <Input 
                 id="email-address"
                 value={formFields.email || ''}
                 onChange={(e) => handleFieldChange('email', e.target.value)}
                 placeholder="beispiel@email.de"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="email-subject">Betreff (optional)</Label>
+              <Label htmlFor="email-subject" className="dark:text-gray-200">Betreff (optional)</Label>
               <Input 
                 id="email-subject"
                 value={formFields.subject || ''}
                 onChange={(e) => handleFieldChange('subject', e.target.value)}
                 placeholder="Dein Betreff hier"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
           </div>
@@ -330,17 +340,18 @@ END:VEVENT`;
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="payment-address">Bitcoin-Adresse</Label>
+              <Label htmlFor="payment-address" className="dark:text-gray-200">Bitcoin-Adresse</Label>
               <Input 
                 id="payment-address"
                 value={formFields.address || ''}
                 onChange={(e) => handleFieldChange('address', e.target.value)}
                 placeholder="bc1qzm792zk8kgu9v7c287cnvvz4q9phj6gplmfstu"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="payment-amount">Betrag (optional)</Label>
+              <Label htmlFor="payment-amount" className="dark:text-gray-200">Betrag (optional)</Label>
               <Input 
                 id="payment-amount"
                 type="number"
@@ -348,6 +359,7 @@ END:VEVENT`;
                 value={formFields.amount || ''}
                 onChange={(e) => handleFieldChange('amount', e.target.value)}
                 placeholder="0.0001"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
           </div>
@@ -357,22 +369,24 @@ END:VEVENT`;
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="location-latitude">Breitengrad</Label>
+              <Label htmlFor="location-latitude" className="dark:text-gray-200">Breitengrad</Label>
               <Input 
                 id="location-latitude"
                 value={formFields.latitude || ''}
                 onChange={(e) => handleFieldChange('latitude', e.target.value)}
                 placeholder="52.520008"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="location-longitude">Längengrad</Label>
+              <Label htmlFor="location-longitude" className="dark:text-gray-200">Längengrad</Label>
               <Input 
                 id="location-longitude"
                 value={formFields.longitude || ''}
                 onChange={(e) => handleFieldChange('longitude', e.target.value)}
                 placeholder="13.404954"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
           </div>
@@ -382,49 +396,57 @@ END:VEVENT`;
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="event-title">Titel</Label>
+              <Label htmlFor="event-title" className="dark:text-gray-200">Titel</Label>
               <Input 
                 id="event-title"
                 value={formFields.title || ''}
                 onChange={(e) => handleFieldChange('title', e.target.value)}
                 placeholder="Besprechung"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="event-location">Ort</Label>
+              <Label htmlFor="event-location" className="dark:text-gray-200">Ort</Label>
               <Input 
                 id="event-location"
                 value={formFields.location || ''}
                 onChange={(e) => handleFieldChange('location', e.target.value)}
                 placeholder="Konferenzraum A"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             {/* Benutzerdefinierter Datum/Zeit-Auswähler für Beginn */}
-            <CustomDateTimePicker
-              id="event-start"
-              label="Beginn"
-              value={formFields.start || ''}
-              onChange={(value) => handleFieldChange('start', value)}
-              helperText="Datum und Uhrzeit des Beginns"
-            />
+            <div className="dark:text-gray-200">
+              <CustomDateTimePicker
+                id="event-start"
+                label="Beginn"
+                value={formFields.start || ''}
+                onChange={(value) => handleFieldChange('start', value)}
+                helperText="Datum und Uhrzeit des Beginns"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+              />
+            </div>
             
             {/* Benutzerdefinierter Datum/Zeit-Auswähler für Ende */}
-            <CustomDateTimePicker
-              id="event-end"
-              label="Ende"
-              value={formFields.end || ''}
-              onChange={(value) => handleFieldChange('end', value)}
-              helperText="Datum und Uhrzeit des Endes"
-            />
+            <div className="dark:text-gray-200">
+              <CustomDateTimePicker
+                id="event-end"
+                label="Ende"
+                value={formFields.end || ''}
+                onChange={(value) => handleFieldChange('end', value)}
+                helperText="Datum und Uhrzeit des Endes"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+              />
+            </div>
           </div>
         );
         
       default:
         return (
           <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground dark:text-gray-400">
               Bitte wählen Sie eine Vorlage aus dem Templates-Tab.
             </p>
           </div>
