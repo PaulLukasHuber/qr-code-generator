@@ -4,14 +4,12 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
 import { Slider } from '../ui/slider';
-import { Download, RefreshCw, Settings, Palette, Move, FileCode, Shield, Upload, Trash2, ImagePlus } from 'lucide-react';
-import { ImageIcon } from 'lucide-react'; // Umbenannt um Konflikte zu vermeiden
+import { Download, RefreshCw, Settings, Palette, Move, Image, FileCode, Shield } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import ColorSchemeSelector from './ColorSchemeSelector';
 import QRCodeTemplates from './QRCodeTemplates';
 import TemplateFormFields from './TemplateFormFields';
-import LogoConfigSection from './LogoConfigSection';
 import { useTheme } from '@/context/ThemeContext';
 
 // QRCode-Bibliothek vorab importieren, um Ladeprobleme zu vermeiden
@@ -22,7 +20,7 @@ import QRCode from 'qrcode';
  * 
  * Erlaubt es Benutzern, QR-Codes zu erstellen mit verschiedenen Vorlagen,
  * anpassbaren Farben, Größen und weiteren Optionen.
- * Mit Unterstützung für Dark Mode und Logo-Integration.
+ * Mit Unterstützung für Dark Mode.
  */
 const QRCodeGenerator = () => {
   // Theme context
@@ -40,18 +38,6 @@ const QRCodeGenerator = () => {
   const [qrInitialized, setQrInitialized] = useState(false);
   const [activeTab, setActiveTab] = useState('templates'); // Standardtab auf Templates
   const [activeTemplateId, setActiveTemplateId] = useState(''); // ID des aktuell ausgewählten Templates
-  
-  // Logo-Integration States
-  const [logo, setLogo] = useState(null); // Store logo as data URL
-  const [logoSize, setLogoSize] = useState(20); // Logo size as percentage of QR code (10-40%)
-  const [showLogo, setShowLogo] = useState(false); // Toggle for enabling/disabling logo
-  const [logoShape, setLogoShape] = useState('roundedSquare'); // 'square', 'roundedSquare', 'circle'
-  const [logoBackground, setLogoBackground] = useState('#FFFFFF'); // Background color for logo
-  const [useCustomBackground, setUseCustomBackground] = useState(true); // Whether to use custom background
-  
-  // Neue States für SVG-Support
-  const [logoType, setLogoType] = useState(null); // 'svg' oder 'raster'
-  const [logoSvgContent, setLogoSvgContent] = useState(null); // Original SVG content
   
   // Ref für SVG-Container
   const svgRef = useRef(null);
@@ -94,12 +80,9 @@ const QRCodeGenerator = () => {
         effectiveFgColor = '#ffffff';
       }
       
-      // Force error correction to 'H' when logo is enabled
-      const effectiveErrorLevel = showLogo && logo ? 'H' : errorCorrectionLevel;
-      
       // QR-Code-Daten generieren
       QRCode.toDataURL(text || 'https://example.com', {
-        errorCorrectionLevel: effectiveErrorLevel,
+        errorCorrectionLevel: errorCorrectionLevel, // Use the selected level
         margin: 1,
         width: size,
         color: {
@@ -114,18 +97,13 @@ const QRCodeGenerator = () => {
           return;
         }
         
-        // Überprüfen, ob ein Logo hinzugefügt werden soll
-        if (showLogo && logo) {
-          addLogoToQRCode(url);
+        // Jetzt rendern wir den QR-Code mit unserem eigenen Ansatz
+        if (svgRef.current) {
+          // QR-Code-Elemente mit abgerundeten Ecken erstellen
+          renderQRCodeWithRoundedCorners(url);
         } else {
-          // Jetzt rendern wir den QR-Code mit unserem eigenen Ansatz
-          if (svgRef.current) {
-            // QR-Code-Elemente mit abgerundeten Ecken erstellen
-            renderQRCodeWithRoundedCorners(url);
-          } else {
-            console.error("svgRef.current ist null nach QR-Code-Generierung");
-            setError("Fehler beim Rendern des QR-Codes");
-          }
+          console.error("svgRef.current ist null nach QR-Code-Generierung");
+          setError("Fehler beim Rendern des QR-Codes");
         }
         
         setLoading(false);
@@ -135,145 +113,6 @@ const QRCodeGenerator = () => {
       setError("QR-Code konnte nicht generiert werden: " + error.message);
       setLoading(false);
     }
-  };
-
-  // Logo zum QR-Code hinzufügen - verbesserte Version
-  const addLogoToQRCode = (qrDataUrl) => {
-    if (!svgRef.current) return;
-    
-    const logoImg = new Image();
-    const qrImg = new Image();
-    
-    // Wenn beide Bilder geladen sind, kombinieren
-    Promise.all([
-      new Promise(resolve => {
-        logoImg.onload = resolve;
-        logoImg.src = logo;
-      }),
-      new Promise(resolve => {
-        qrImg.onload = resolve;
-        qrImg.src = qrDataUrl;
-      })
-    ]).then(() => {
-      // Canvas erstellen, um QR und Logo zu kombinieren
-      const canvas = document.createElement('canvas');
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext('2d');
-      
-      // Zuerst den QR-Code zeichnen
-      ctx.drawImage(qrImg, 0, 0, size, size);
-      
-      // Logo-Größe und Position berechnen
-      const logoWidth = size * (logoSize / 100);
-      const logoHeight = logoWidth;
-      const logoX = (size - logoWidth) / 2;
-      const logoY = (size - logoHeight) / 2;
-      
-      // Padding für das Logo, falls ein Hintergrund verwendet wird
-      const padding = logoWidth * 0.1; // 10% der Logogröße als Padding
-      
-      // Hintergrund für das Logo zeichnen, wenn gewünscht
-      if (useCustomBackground && logoBackground.toLowerCase() !== 'transparent') {
-        ctx.save();
-        
-        // Hintergrundform basierend auf Auswahl
-        if (logoShape === 'circle') {
-          // Kreisförmiger Hintergrund
-          ctx.beginPath();
-          ctx.arc(logoX + logoWidth / 2, logoY + logoHeight / 2, logoWidth / 2 + padding, 0, Math.PI * 2);
-          ctx.closePath();
-          
-          // Fülle mit der ausgewählten Farbe
-          ctx.fillStyle = logoBackground;
-          ctx.fill();
-          
-          // Optionaler leichter Schatten für bessere Sichtbarkeit
-          ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
-          ctx.shadowBlur = 5;
-          ctx.shadowOffsetX = 0;
-          ctx.shadowOffsetY = 0;
-        } else if (logoShape === 'roundedSquare') {
-          // Abgerundetes Quadrat als Hintergrund
-          const borderRadius = logoWidth * 0.2; // 20% der Logogröße als Rundung
-          
-          ctx.beginPath();
-          ctx.moveTo(logoX - padding + borderRadius, logoY - padding);
-          ctx.lineTo(logoX + logoWidth + padding - borderRadius, logoY - padding);
-          ctx.quadraticCurveTo(logoX + logoWidth + padding, logoY - padding, logoX + logoWidth + padding, logoY - padding + borderRadius);
-          ctx.lineTo(logoX + logoWidth + padding, logoY + logoHeight + padding - borderRadius);
-          ctx.quadraticCurveTo(logoX + logoWidth + padding, logoY + logoHeight + padding, logoX + logoWidth + padding - borderRadius, logoY + logoHeight + padding);
-          ctx.lineTo(logoX - padding + borderRadius, logoY + logoHeight + padding);
-          ctx.quadraticCurveTo(logoX - padding, logoY + logoHeight + padding, logoX - padding, logoY + logoHeight + padding - borderRadius);
-          ctx.lineTo(logoX - padding, logoY - padding + borderRadius);
-          ctx.quadraticCurveTo(logoX - padding, logoY - padding, logoX - padding + borderRadius, logoY - padding);
-          ctx.closePath();
-          
-          // Fülle mit der ausgewählten Farbe
-          ctx.fillStyle = logoBackground;
-          ctx.fill();
-          
-          // Optionaler leichter Schatten für bessere Sichtbarkeit
-          ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
-          ctx.shadowBlur = 5;
-          ctx.shadowOffsetX = 0;
-          ctx.shadowOffsetY = 0;
-        } else {
-          // Einfaches Quadrat als Hintergrund
-          ctx.fillStyle = logoBackground;
-          ctx.fillRect(logoX - padding, logoY - padding, logoWidth + padding * 2, logoHeight + padding * 2);
-        }
-        
-        ctx.restore();
-      }
-      
-      // Logo mit entsprechender Form zeichnen
-      ctx.save();
-      
-      if (logoShape === 'circle') {
-        // Kreisförmiges Clipping-Pfad für das Logo
-        ctx.beginPath();
-        ctx.arc(logoX + logoWidth / 2, logoY + logoHeight / 2, logoWidth / 2, 0, Math.PI * 2);
-        ctx.closePath();
-        ctx.clip();
-      } else if (logoShape === 'roundedSquare') {
-        // Abgerundetes Rechteck Clipping-Pfad
-        const borderRadius = logoWidth * 0.2;
-        
-        ctx.beginPath();
-        ctx.moveTo(logoX + borderRadius, logoY);
-        ctx.lineTo(logoX + logoWidth - borderRadius, logoY);
-        ctx.quadraticCurveTo(logoX + logoWidth, logoY, logoX + logoWidth, logoY + borderRadius);
-        ctx.lineTo(logoX + logoWidth, logoY + logoHeight - borderRadius);
-        ctx.quadraticCurveTo(logoX + logoWidth, logoY + logoHeight, logoX + logoWidth - borderRadius, logoY + logoHeight);
-        ctx.lineTo(logoX + borderRadius, logoY + logoHeight);
-        ctx.quadraticCurveTo(logoX, logoY + logoHeight, logoX, logoY + logoHeight - borderRadius);
-        ctx.lineTo(logoX, logoY + borderRadius);
-        ctx.quadraticCurveTo(logoX, logoY, logoX + borderRadius, logoY);
-        ctx.closePath();
-        ctx.clip();
-      }
-      
-      // Logo zeichnen
-      ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
-      
-      ctx.restore();
-      
-      // In Data-URL umwandeln und rendern
-      const combinedDataUrl = canvas.toDataURL('image/png');
-      renderQRCodeWithRoundedCorners(combinedDataUrl);
-      
-      // Die kombinierte Data-URL für Downloads speichern
-      qrDataRef.current = {
-        svgElement: null,
-        dataUrl: combinedDataUrl
-      };
-    }).catch(err => {
-      console.error('Fehler beim Kombinieren von QR-Code und Logo:', err);
-      setError('Logo konnte nicht hinzugefügt werden: ' + err.message);
-      // Fallback zum Rendern ohne Logo
-      renderQRCodeWithRoundedCorners(qrDataUrl);
-    });
   };
 
   // QR-Code rendern
@@ -320,10 +159,7 @@ const QRCodeGenerator = () => {
     }, 300); // Debounce-Verzögerung
 
     return () => clearTimeout(timer);
-  }, [
-    text, fgColor, bgColor, size, qrInitialized, errorCorrectionLevel, theme, 
-    logo, logoSize, showLogo, logoShape, logoBackground, useCustomBackground
-  ]);
+  }, [text, fgColor, bgColor, size, qrInitialized, errorCorrectionLevel, theme]);
   
   // Farbschema auswählen
   const handleSelectColorScheme = (newFgColor, newBgColor) => {
@@ -352,47 +188,65 @@ const QRCodeGenerator = () => {
     setText(newContent);
   };
   
-  // Als SVG herunterladen - robuste Version
+  // Als SVG herunterladen
   const downloadSVG = () => {
-    if (!qrDataRef.current || !qrDataRef.current.dataUrl) {
+    if (!qrDataRef.current) {
       setError("Kein QR-Code zum Herunterladen vorhanden.");
+      console.error("qrDataRef.current ist nicht initialisiert");
       return;
     }
     
     try {
-      // Standardmethode die in allen Browsern funktioniert verwenden
-      const svgNS = "http://www.w3.org/2000/svg";
-      const svg = document.createElementNS(svgNS, "svg");
-      svg.setAttribute("width", size);
-      svg.setAttribute("height", size);
-      svg.setAttribute("xmlns", svgNS);
-      
-      const rect = document.createElementNS(svgNS, "rect");
-      rect.setAttribute("width", "100%");
-      rect.setAttribute("height", "100%");
-      rect.setAttribute("fill", bgColor);
-      svg.appendChild(rect);
-      
-      const image = document.createElementNS(svgNS, "image");
-      image.setAttribute("href", qrDataRef.current.dataUrl);
-      image.setAttribute("width", "100%");
-      image.setAttribute("height", "100%");
-      svg.appendChild(image);
-      
-      // SVG in String konvertieren
-      const svgData = new XMLSerializer().serializeToString(svg);
-      
-      // Download
-      const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
-      const svgUrl = URL.createObjectURL(svgBlob);
-      
-      const downloadLink = document.createElement('a');
-      downloadLink.href = svgUrl;
-      downloadLink.download = 'qrcode.svg';
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-      URL.revokeObjectURL(svgUrl);
+      // Da wir kein SVG-Element mehr erzeugen, erstellen wir ein einfaches SVG
+      if (!qrDataRef.current.svgElement) {
+        if (!qrDataRef.current.dataUrl) {
+          setError("Keine QR-Code Daten vorhanden.");
+          return;
+        }
+        
+        // Erstelle ein einfaches SVG mit dem QR-Code als eingebettetes Bild
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("width", size);
+        svg.setAttribute("height", size);
+        svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        
+        const rect = document.createElementNS(svgNS, "rect");
+        rect.setAttribute("width", "100%");
+        rect.setAttribute("height", "100%");
+        rect.setAttribute("fill", bgColor);
+        svg.appendChild(rect);
+        
+        const image = document.createElementNS(svgNS, "image");
+        image.setAttribute("href", qrDataRef.current.dataUrl);
+        image.setAttribute("width", "100%");
+        image.setAttribute("height", "100%");
+        svg.appendChild(image);
+        
+        const svgData = new XMLSerializer().serializeToString(svg);
+        const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+        const svgUrl = URL.createObjectURL(svgBlob);
+        
+        const downloadLink = document.createElement('a');
+        downloadLink.href = svgUrl;
+        downloadLink.download = 'qrcode.svg';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(svgUrl);
+      } else {
+        // Originaler Code für den Fall, dass SVG-Element vorhanden ist
+        const svgData = new XMLSerializer().serializeToString(qrDataRef.current.svgElement);
+        const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+        const svgUrl = URL.createObjectURL(svgBlob);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = svgUrl;
+        downloadLink.download = 'qrcode.svg';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(svgUrl);
+      }
       
       setSuccessMessage('SVG erfolgreich heruntergeladen!');
       setTimeout(() => setSuccessMessage(''), 2000);
@@ -457,7 +311,7 @@ const QRCodeGenerator = () => {
                 onClick={() => setActiveTab('content')}
                 className="dark:text-gray-300 dark:hover:text-gray-100"
               >
-                <ImageIcon className="w-4 h-4 mr-2" />
+                <Image className="w-4 h-4 mr-2" />
                 Inhalt
               </TabsTrigger>
               <TabsTrigger 
@@ -577,30 +431,6 @@ const QRCodeGenerator = () => {
                     </div>
                   </div>
                 </div>
-                
-                {/* Logo Upload */}
-                <div className="border-t dark:border-gray-700 pt-4 mt-4">
-                  <LogoConfigSection 
-                    logo={logo}
-                    setLogo={setLogo}
-                    logoSize={logoSize}
-                    setLogoSize={setLogoSize}
-                    showLogo={showLogo}
-                    setShowLogo={setShowLogo}
-                    logoShape={logoShape}
-                    setLogoShape={setLogoShape}
-                    logoBackground={logoBackground}
-                    setLogoBackground={setLogoBackground}
-                    useCustomBackground={useCustomBackground}
-                    setUseCustomBackground={setUseCustomBackground}
-                    errorCorrectionLevel={errorCorrectionLevel}
-                    setErrorCorrectionLevel={setErrorCorrectionLevel}
-                    logoType={logoType}
-                    setLogoType={setLogoType}
-                    logoSvgContent={logoSvgContent}
-                    setLogoSvgContent={setLogoSvgContent}
-                  />
-                </div>
               </div>
             </TabsContent>
             
@@ -642,12 +472,6 @@ const QRCodeGenerator = () => {
                 PNG
               </Button>
             </div>
-            
-            {logoType === 'svg' && showLogo && logo && (
-              <div className="mt-2 p-2 text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded">
-                <p>Hinweis: SVG-Logos verlieren derzeit im Export ihre Vektoreigenschaften aufgrund technischer Einschränkungen bei SVG-in-SVG-Einbettung.</p>
-              </div>
-            )}
           </div>
           
           {/* Fehlermeldungen und Erfolgsmeldungen */}
@@ -699,48 +523,35 @@ const QRCodeGenerator = () => {
                         errorCorrectionLevel === 'Q' ? 'text-green-400' :   
                         'text-green-700'                                   
                       }`} />
-                      <span className="font-medium text-sm dark:text-gray-200">
-                        Fehlerkorrektur Level {showLogo && logo ? 'H' : errorCorrectionLevel}
-                        {showLogo && logo && errorCorrectionLevel !== 'H' && ' (automatisch)'}
-                      </span>
+                      <span className="font-medium text-sm dark:text-gray-200">Fehlerkorrektur Level {errorCorrectionLevel}</span>
                     </div>
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                      (showLogo && logo) || errorCorrectionLevel === 'H' ? 
-                        'bg-green-200 text-green-900 dark:bg-green-900/70 dark:text-green-300' :
-                      errorCorrectionLevel === 'L' ? 
-                        'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' :
-                      errorCorrectionLevel === 'M' ? 
-                        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300' :
-                        'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300'
+                      errorCorrectionLevel === 'L' ? 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' :
+                      errorCorrectionLevel === 'M' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300' :
+                      errorCorrectionLevel === 'Q' ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300' :
+                      'bg-green-200 text-green-900 dark:bg-green-900/70 dark:text-green-300'
                     }`}>  
-                      {(showLogo && logo) || errorCorrectionLevel === 'H' ? '30%' :
-                      errorCorrectionLevel === 'L' ? '7%' :
-                      errorCorrectionLevel === 'M' ? '15%' : '25%'}
+                      {errorCorrectionLevel === 'L' ? '7%' :
+                      errorCorrectionLevel === 'M' ? '15%' :
+                      errorCorrectionLevel === 'Q' ? '25%' : '30%'}
                     </span>
                   </div>
                   <p className="text-xs mt-1 text-gray-600 dark:text-gray-300">
-                    {(showLogo && logo) ? 
-                      'Höchste Fehlerkorrektur aktiviert für Logo-Integration.' :
-                      errorCorrectionLevel === 'L' ? 
-                        'Geringere Fehlerkorrektur, ideal für saubere Umgebungen.' :
-                      errorCorrectionLevel === 'M' ? 
-                        'Ausgewogene Fehlerkorrektur für allgemeine Anwendungen.' :
-                      errorCorrectionLevel === 'Q' ? 
-                        'Verbesserte Fehlerkorrektur, gut für Außenbereiche.' :
-                        'Höchste Fehlerkorrektur, ideal wenn der QR-Code beschädigt werden könnte.'}
+                    {errorCorrectionLevel === 'L' ? 'Geringere Fehlerkorrektur, ideal für saubere Umgebungen.' :
+                    errorCorrectionLevel === 'M' ? 'Ausgewogene Fehlerkorrektur für allgemeine Anwendungen.' :
+                    errorCorrectionLevel === 'Q' ? 'Verbesserte Fehlerkorrektur, gut für Außenbereiche.' :
+                    'Höchste Fehlerkorrektur, ideal wenn der QR-Code beschädigt werden könnte.'}
                   </p>
                   <div className="flex mt-2 gap-1">
                     {['L', 'M', 'Q', 'H'].map(level => (
                       <button
                         key={level}
                         className={`text-xs px-2 py-0.5 rounded transition-colors ${
-                          (showLogo && logo && level === 'H') || 
-                          (!showLogo && level === errorCorrectionLevel) 
+                          level === errorCorrectionLevel 
                             ? 'bg-primary text-primary-foreground dark:bg-primary dark:text-primary-foreground font-medium' 
                             : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                        } ${showLogo && logo && level !== 'H' ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        onClick={() => !showLogo && setErrorCorrectionLevel(level)}
-                        disabled={showLogo && logo && level !== 'H'}
+                        }`}
+                        onClick={() => setErrorCorrectionLevel(level)}
                       >
                         {level}
                       </button>
