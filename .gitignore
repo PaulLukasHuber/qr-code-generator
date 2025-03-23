@@ -1,4 +1,4 @@
-# Abhängigkeiten
+# Dependencies
 /node_modules
 /.pnp
 .pnp.js
@@ -12,7 +12,7 @@ pnpm-lock.yaml
 /cypress/screenshots/
 .nyc_output
 
-# Produktion
+# Production
 /build
 /dist
 /dist-ssr
@@ -27,8 +27,8 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Editor-Verzeichnisse und -Dateien
-# VSCodium/VS Code spezifisch
+# Editor directories and files
+# VSCodium/VS Code specific
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
@@ -36,7 +36,7 @@ lerna-debug.log*
 !.vscode/launch.json
 .VSCodeCounter/
 
-# VSCodium Erweiterungen
+# VSCodium extensions
 .vscodium/*
 .codium/*
 !.vscodium/extensions.json
@@ -44,14 +44,14 @@ lerna-debug.log*
 !.vscodium/tasks.json
 !.vscodium/launch.json
 
-# Lokale Historie für VS Code / VSCodium
+# Local history for VS Code / VSCodium
 .history/
 .ionide
 
-# TypeScript-Cache
+# TypeScript cache
 *.tsbuildinfo
 
-# Betriebssystemspezifische Dateien
+# OS specific files
 .DS_Store
 .DS_Store?
 ._*
@@ -61,12 +61,12 @@ ehthumbs.db
 Thumbs.db
 desktop.ini
 
-# Umgebungsvariablen
+# Environment variables
 .env
 .env.*
 !.env.example
 
-# Benutzerspezifische Einstellungen
+# User-specific settings
 .idea
 *.suo
 *.ntvs*
@@ -74,12 +74,12 @@ desktop.ini
 *.sln
 *.sw?
 
-# Temporäre Dateien
+# Temporary files
 .tmp
 .temp
 
-# Serverless-Verzeichnisse
+# Serverless directories
 .serverless/
 
-# Automatisch generierte Dateien
+# Automatically generated files
 .eslintcache

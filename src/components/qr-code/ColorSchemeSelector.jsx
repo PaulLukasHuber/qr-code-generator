@@ -3,74 +3,72 @@ import { Label } from '../ui/label';
 import { useTheme } from '@/context/ThemeContext';
 
 /**
- * Komponente zur Auswahl von Farbschemata für QR-Codes
- * Mit Unterstützung für Dark Mode
+ * Component for selecting color schemes for QR codes
  */
 const ColorSchemeSelector = ({ onSelectScheme }) => {
   const { theme } = useTheme();
   
-  // Vordefinierte Farbschemata mit zusätzlichen Dark Mode Optionen
+  // Predefined color schemes
   const COLOR_SCHEMES = [
     { 
       name: 'Standard', 
       fg: '#000000', 
       bg: '#FFFFFF',
-      description: 'Klassisches Schwarz auf Weiß für optimale Scanbarkeit'
+      description: 'Classic black on white for optimal scannability'
     },
     { 
-      name: 'Hoher Kontrast', 
+      name: 'High Contrast', 
       fg: '#000000', 
       bg: '#FFFF00',
-      description: 'Schwarz auf Gelb für bessere Sichtbarkeit und Barrierefreiheit'
+      description: 'Black on yellow for better visibility and accessibility'
     },
     { 
       name: 'Elegant', 
       fg: '#1E3A8A', 
       bg: '#F8FAFC',
-      description: 'Dunkles Blau auf hellem Hintergrund für professionelle Anwendungen'
+      description: 'Dark blue on light background for professional applications'
     },
     { 
-      name: 'Dunkel', 
+      name: 'Dark', 
       fg: '#E2E8F0', 
       bg: '#1E293B',
-      description: 'Heller Vordergrund auf dunklem Hintergrund für moderne Designs'
+      description: 'Light foreground on dark background for modern designs'
     },
     { 
-      name: 'Minze', 
+      name: 'Mint', 
       fg: '#065F46', 
       bg: '#ECFDF5',
-      description: 'Grün-Töne für frische, organische Erscheinung'
+      description: 'Green tones for fresh, organic appearance'
     },
     { 
       name: 'Coral', 
       fg: '#9F1239', 
       bg: '#FFF1F2',
-      description: 'Warme Rot-Töne für auffälligen, lebendigen Look'
+      description: 'Warm red tones for vibrant, eye-catching look'
     },
     { 
-      name: 'Blaugrau', 
+      name: 'Blue-gray', 
       fg: '#334155', 
       bg: '#F1F5F9',
-      description: 'Dezente neutrale Töne für zurückhaltende Anwendungen'
+      description: 'Subtle neutral tones for understated applications'
     },
     { 
-      name: 'Kontrast Plus', 
+      name: 'Contrast Plus', 
       fg: '#312E81', 
       bg: '#E0E7FF',
-      description: 'Verstärkter Kontrast für bessere Lesbarkeit bei unterschiedlichen Lichtverhältnissen'
+      description: 'Enhanced contrast for better readability in various lighting conditions'
     },
-    // New color scheme optimized for dark mode
     { 
-      name: 'Nachtmodus', 
+      name: 'Night Mode', 
       fg: '#FFFFFF', 
       bg: '#2E3440',
-      description: 'Optimiert für dunkle Umgebungen und Dark Mode'
+      description: 'Optimized for dark environments and dark mode'
     },
   ];
 
   return (
     <div className="space-y-2">
-      <Label className="dark:text-gray-200">Farbschemata</Label>
+      <Label className="dark:text-gray-200">Color Schemes</Label>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {COLOR_SCHEMES.map((scheme, index) => (
           <div 

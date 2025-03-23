@@ -5,7 +5,7 @@ import { Label } from '../ui/label';
 import { Button } from '../ui/button';
 import { Slider } from '../ui/slider';
 import { Download, RefreshCw, Settings, Palette, Move, FileCode, Shield, Upload, Trash2, ImagePlus } from 'lucide-react';
-import { ImageIcon } from 'lucide-react'; // Umbenannt um Konflikte zu vermeiden
+import { ImageIcon } from 'lucide-react'; // Renamed to avoid conflicts
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import ColorSchemeSelector from './ColorSchemeSelector';
@@ -14,21 +14,21 @@ import TemplateFormFields from './TemplateFormFields';
 import LogoConfigSection from './LogoConfigSection';
 import { useTheme } from '@/context/ThemeContext';
 
-// QRCode-Bibliothek vorab importieren, um Ladeprobleme zu vermeiden
+// Import QRCode library in advance to avoid loading issues
 import QRCode from 'qrcode';
 
 /**
- * QR-Code Generator Komponente
+ * QR Code Generator Component
  * 
- * Erlaubt es Benutzern, QR-Codes zu erstellen mit verschiedenen Vorlagen,
- * anpassbaren Farben, Größen und weiteren Optionen.
- * Mit Unterstützung für Dark Mode und Logo-Integration.
+ * Allows users to create QR codes with various templates,
+ * customizable colors, sizes, and other options.
+ * With support for dark mode and logo integration.
  */
 const QRCodeGenerator = () => {
   // Theme context
   const { theme } = useTheme();
   
-  // States für alle Einstellungen
+  // States for all settings
   const [text, setText] = useState('https://example.com');
   const [fgColor, setFgColor] = useState('#000000');
   const [bgColor, setBgColor] = useState('#ffffff');
@@ -38,10 +38,10 @@ const QRCodeGenerator = () => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
   const [qrInitialized, setQrInitialized] = useState(false);
-  const [activeTab, setActiveTab] = useState('templates'); // Standardtab auf Templates
-  const [activeTemplateId, setActiveTemplateId] = useState(''); // ID des aktuell ausgewählten Templates
+  const [activeTab, setActiveTab] = useState('templates'); // Default tab to Templates
+  const [activeTemplateId, setActiveTemplateId] = useState(''); // ID of the currently selected template
   
-  // Logo-Integration States
+  // Logo integration states
   const [logo, setLogo] = useState(null); // Store logo as data URL
   const [logoSize, setLogoSize] = useState(20); // Logo size as percentage of QR code (10-40%)
   const [showLogo, setShowLogo] = useState(false); // Toggle for enabling/disabling logo
@@ -49,17 +49,17 @@ const QRCodeGenerator = () => {
   const [logoBackground, setLogoBackground] = useState('#FFFFFF'); // Background color for logo
   const [useCustomBackground, setUseCustomBackground] = useState(true); // Whether to use custom background
   
-  // Neue States für SVG-Support
-  const [logoType, setLogoType] = useState(null); // 'svg' oder 'raster'
+  // New states for SVG support
+  const [logoType, setLogoType] = useState(null); // 'svg' or 'raster'
   const [logoSvgContent, setLogoSvgContent] = useState(null); // Original SVG content
   
-  // Ref für SVG-Container
+  // Ref for SVG container
   const svgRef = useRef(null);
-  const qrDataRef = useRef(null); // Speichert die QR-Code-Daten für Styling
+  const qrDataRef = useRef(null); // Stores the QR code data for styling
   
-  // Initialisiere den QR-Code, wenn die Komponente gemountet wird
+  // Initialize the QR code when the component is mounted
   useEffect(() => {
-    // Warten, bis das DOM vollständig gerendert ist
+    // Wait until the DOM is fully rendered
     const timer = setTimeout(() => {
       if (svgRef.current) {
         setQrInitialized(true);
@@ -70,10 +70,10 @@ const QRCodeGenerator = () => {
     return () => clearTimeout(timer);
   }, []);
   
-  // QR-Code generieren und rendern
+  // Generate and render QR code
   const generateQRCode = () => {
     if (!svgRef.current || !qrInitialized) {
-      console.log("SVG-Ref ist noch nicht bereit oder QR nicht initialisiert");
+      console.log("SVG ref is not ready or QR not initialized");
       return;
     }
     
@@ -97,7 +97,7 @@ const QRCodeGenerator = () => {
       // Force error correction to 'H' when logo is enabled
       const effectiveErrorLevel = showLogo && logo ? 'H' : errorCorrectionLevel;
       
-      // QR-Code-Daten generieren
+      // Generate QR code data
       QRCode.toDataURL(text || 'https://example.com', {
         errorCorrectionLevel: effectiveErrorLevel,
         margin: 1,
@@ -108,43 +108,43 @@ const QRCodeGenerator = () => {
         }
       }, (err, url) => {
         if (err) {
-          console.error("Fehler bei der QR-Code Generierung:", err);
-          setError("QR-Code konnte nicht generiert werden: " + err.message);
+          console.error("Error generating QR code:", err);
+          setError("QR code could not be generated: " + err.message);
           setLoading(false);
           return;
         }
         
-        // Überprüfen, ob ein Logo hinzugefügt werden soll
+        // Check if a logo should be added
         if (showLogo && logo) {
           addLogoToQRCode(url);
         } else {
-          // Jetzt rendern wir den QR-Code mit unserem eigenen Ansatz
+          // Now we render the QR code with our own approach
           if (svgRef.current) {
-            // QR-Code-Elemente mit abgerundeten Ecken erstellen
+            // Create QR code elements with rounded corners
             renderQRCodeWithRoundedCorners(url);
           } else {
-            console.error("svgRef.current ist null nach QR-Code-Generierung");
-            setError("Fehler beim Rendern des QR-Codes");
+            console.error("svgRef.current is null after QR code generation");
+            setError("Error rendering QR code");
           }
         }
         
         setLoading(false);
       });
     } catch (error) {
-      console.error("Fehler beim Generieren des QR-Codes:", error);
-      setError("QR-Code konnte nicht generiert werden: " + error.message);
+      console.error("Error generating QR code:", error);
+      setError("QR code could not be generated: " + error.message);
       setLoading(false);
     }
   };
 
-  // Logo zum QR-Code hinzufügen - verbesserte Version
+  // Add logo to QR code - improved version
   const addLogoToQRCode = (qrDataUrl) => {
     if (!svgRef.current) return;
     
     const logoImg = new Image();
     const qrImg = new Image();
     
-    // Wenn beide Bilder geladen sind, kombinieren
+    // When both images are loaded, combine them
     Promise.all([
       new Promise(resolve => {
         logoImg.onload = resolve;
@@ -155,47 +155,47 @@ const QRCodeGenerator = () => {
         qrImg.src = qrDataUrl;
       })
     ]).then(() => {
-      // Canvas erstellen, um QR und Logo zu kombinieren
+      // Create canvas to combine QR and logo
       const canvas = document.createElement('canvas');
       canvas.width = size;
       canvas.height = size;
       const ctx = canvas.getContext('2d');
       
-      // Zuerst den QR-Code zeichnen
+      // First draw the QR code
       ctx.drawImage(qrImg, 0, 0, size, size);
       
-      // Logo-Größe und Position berechnen
+      // Calculate logo size and position
       const logoWidth = size * (logoSize / 100);
       const logoHeight = logoWidth;
       const logoX = (size - logoWidth) / 2;
       const logoY = (size - logoHeight) / 2;
       
-      // Padding für das Logo, falls ein Hintergrund verwendet wird
-      const padding = logoWidth * 0.1; // 10% der Logogröße als Padding
+      // Padding for the logo if a background is used
+      const padding = logoWidth * 0.1; // 10% of logo size as padding
       
-      // Hintergrund für das Logo zeichnen, wenn gewünscht
+      // Draw background for the logo if desired
       if (useCustomBackground && logoBackground.toLowerCase() !== 'transparent') {
         ctx.save();
         
-        // Hintergrundform basierend auf Auswahl
+        // Background shape based on selection
         if (logoShape === 'circle') {
-          // Kreisförmiger Hintergrund
+          // Circular background
           ctx.beginPath();
           ctx.arc(logoX + logoWidth / 2, logoY + logoHeight / 2, logoWidth / 2 + padding, 0, Math.PI * 2);
           ctx.closePath();
           
-          // Fülle mit der ausgewählten Farbe
+          // Fill with selected color
           ctx.fillStyle = logoBackground;
           ctx.fill();
           
-          // Optionaler leichter Schatten für bessere Sichtbarkeit
+          // Optional light shadow for better visibility
           ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
           ctx.shadowBlur = 5;
           ctx.shadowOffsetX = 0;
           ctx.shadowOffsetY = 0;
         } else if (logoShape === 'roundedSquare') {
-          // Abgerundetes Quadrat als Hintergrund
-          const borderRadius = logoWidth * 0.2; // 20% der Logogröße als Rundung
+          // Rounded square as background
+          const borderRadius = logoWidth * 0.2; // 20% of logo size as rounding
           
           ctx.beginPath();
           ctx.moveTo(logoX - padding + borderRadius, logoY - padding);
@@ -209,17 +209,17 @@ const QRCodeGenerator = () => {
           ctx.quadraticCurveTo(logoX - padding, logoY - padding, logoX - padding + borderRadius, logoY - padding);
           ctx.closePath();
           
-          // Fülle mit der ausgewählten Farbe
+          // Fill with selected color
           ctx.fillStyle = logoBackground;
           ctx.fill();
           
-          // Optionaler leichter Schatten für bessere Sichtbarkeit
+          // Optional light shadow for better visibility
           ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
           ctx.shadowBlur = 5;
           ctx.shadowOffsetX = 0;
           ctx.shadowOffsetY = 0;
         } else {
-          // Einfaches Quadrat als Hintergrund
+          // Simple square as background
           ctx.fillStyle = logoBackground;
           ctx.fillRect(logoX - padding, logoY - padding, logoWidth + padding * 2, logoHeight + padding * 2);
         }
@@ -227,17 +227,17 @@ const QRCodeGenerator = () => {
         ctx.restore();
       }
       
-      // Logo mit entsprechender Form zeichnen
+      // Draw logo with appropriate shape
       ctx.save();
       
       if (logoShape === 'circle') {
-        // Kreisförmiges Clipping-Pfad für das Logo
+        // Circular clipping path for the logo
         ctx.beginPath();
         ctx.arc(logoX + logoWidth / 2, logoY + logoHeight / 2, logoWidth / 2, 0, Math.PI * 2);
         ctx.closePath();
         ctx.clip();
       } else if (logoShape === 'roundedSquare') {
-        // Abgerundetes Rechteck Clipping-Pfad
+        // Rounded rectangle clipping path
         const borderRadius = logoWidth * 0.2;
         
         ctx.beginPath();
@@ -254,36 +254,36 @@ const QRCodeGenerator = () => {
         ctx.clip();
       }
       
-      // Logo zeichnen
+      // Draw logo
       ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
       
       ctx.restore();
       
-      // In Data-URL umwandeln und rendern
+      // Convert to data URL and render
       const combinedDataUrl = canvas.toDataURL('image/png');
       renderQRCodeWithRoundedCorners(combinedDataUrl);
       
-      // Die kombinierte Data-URL für Downloads speichern
+      // Save the combined data URL for downloads
       qrDataRef.current = {
         svgElement: null,
         dataUrl: combinedDataUrl
       };
     }).catch(err => {
-      console.error('Fehler beim Kombinieren von QR-Code und Logo:', err);
-      setError('Logo konnte nicht hinzugefügt werden: ' + err.message);
-      // Fallback zum Rendern ohne Logo
+      console.error('Error combining QR code and logo:', err);
+      setError('Logo could not be added: ' + err.message);
+      // Fallback to rendering without logo
       renderQRCodeWithRoundedCorners(qrDataUrl);
     });
   };
 
-  // QR-Code rendern
+  // Render QR code
   const renderQRCodeWithRoundedCorners = (dataUrl) => {
     if (!svgRef.current) return;
     
-    // Container leeren
+    // Clear container
     svgRef.current.innerHTML = '';
     
-    // Container für das Bild erstellen, um Proportionen zu wahren
+    // Create container for the image to maintain proportions
     const container = document.createElement('div');
     container.style.width = `${size}px`;
     container.style.height = `${size}px`;
@@ -292,7 +292,7 @@ const QRCodeGenerator = () => {
     container.style.alignItems = 'center';
     container.style.justifyContent = 'center';
     
-    // Bild mit korrekten Proportionen
+    // Image with correct proportions
     const img = document.createElement('img');
     img.src = dataUrl;
     img.style.maxWidth = '100%';
@@ -304,20 +304,20 @@ const QRCodeGenerator = () => {
     container.appendChild(img);
     svgRef.current.appendChild(container);
     
-    // QR-Code-Daten speichern für Downloads
+    // Store QR code data for downloads
     qrDataRef.current = {
       svgElement: null,
       dataUrl: dataUrl
     };
   };
 
-  // QR-Code bei Änderungen neu generieren
+  // Regenerate QR code when changes occur
   useEffect(() => {
     if (!qrInitialized) return;
     
     const timer = setTimeout(() => {
       generateQRCode();
-    }, 300); // Debounce-Verzögerung
+    }, 300); // Debounce delay
 
     return () => clearTimeout(timer);
   }, [
@@ -325,42 +325,42 @@ const QRCodeGenerator = () => {
     logo, logoSize, showLogo, logoShape, logoBackground, useCustomBackground
   ]);
   
-  // Farbschema auswählen
+  // Select color scheme
   const handleSelectColorScheme = (newFgColor, newBgColor) => {
     setFgColor(newFgColor);
     setBgColor(newBgColor);
-    // QR-Code wird automatisch aktualisiert durch den useEffect
+    // QR code will be automatically updated through the useEffect
   };
   
-  // Template auswählen
+  // Select template
   const handleSelectTemplate = (template) => {
     setText(template.content);
     setFgColor(template.fgColor);
     setBgColor(template.bgColor);
-    setActiveTemplateId(template.id); // Template-ID speichern
+    setActiveTemplateId(template.id); // Save template ID
     
-    // Nach Template-Auswahl zum Content-Tab wechseln, um die Details anzupassen
+    // After template selection, switch to Content tab to adjust details
     setActiveTab('content');
     
-    // Feedback für den Benutzer
-    setSuccessMessage(`Vorlage "${template.name}" wurde angewendet!`);
+    // Feedback for user
+    setSuccessMessage(`Template "${template.name}" applied!`);
     setTimeout(() => setSuccessMessage(''), 2000);
   };
   
-  // Aktualisieren des QR-Code-Inhalts aus den Formularfeldern
+  // Update QR code content from form fields
   const handleContentChangeFromFields = (newContent) => {
     setText(newContent);
   };
   
-  // Als SVG herunterladen - robuste Version
+  // Download as SVG - robust version
   const downloadSVG = () => {
     if (!qrDataRef.current || !qrDataRef.current.dataUrl) {
-      setError("Kein QR-Code zum Herunterladen vorhanden.");
+      setError("No QR code available for download.");
       return;
     }
     
     try {
-      // Standardmethode die in allen Browsern funktioniert verwenden
+      // Use standard method that works in all browsers
       const svgNS = "http://www.w3.org/2000/svg";
       const svg = document.createElementNS(svgNS, "svg");
       svg.setAttribute("width", size);
@@ -379,7 +379,7 @@ const QRCodeGenerator = () => {
       image.setAttribute("height", "100%");
       svg.appendChild(image);
       
-      // SVG in String konvertieren
+      // Convert SVG to string
       const svgData = new XMLSerializer().serializeToString(svg);
       
       // Download
@@ -394,30 +394,30 @@ const QRCodeGenerator = () => {
       document.body.removeChild(downloadLink);
       URL.revokeObjectURL(svgUrl);
       
-      setSuccessMessage('SVG erfolgreich heruntergeladen!');
+      setSuccessMessage('SVG successfully downloaded!');
       setTimeout(() => setSuccessMessage(''), 2000);
     } catch (err) {
-      console.error("Fehler beim SVG-Download:", err);
-      setError("SVG konnte nicht heruntergeladen werden: " + err.message);
+      console.error("Error during SVG download:", err);
+      setError("SVG could not be downloaded: " + err.message);
     }
   };
   
-  // Als PNG herunterladen
+  // Download as PNG
   const downloadPNG = () => {
     if (!qrDataRef.current) {
-      setError("Kein QR-Code zum Herunterladen vorhanden.");
-      console.error("qrDataRef.current ist nicht initialisiert");
+      setError("No QR code available for download.");
+      console.error("qrDataRef.current is not initialized");
       return;
     }
     
     if (!qrDataRef.current.dataUrl) {
-      setError("Keine QR-Code Daten vorhanden.");
-      console.error("qrDataRef.current.dataUrl ist nicht verfügbar");
+      setError("No QR code data available.");
+      console.error("qrDataRef.current.dataUrl is not available");
       return;
     }
     
     try {
-      // Direkter Download der PNG, unabhängig vom cornerRadius
+      // Direct download of PNG, regardless of cornerRadius
       const downloadLink = document.createElement('a');
       downloadLink.href = qrDataRef.current.dataUrl;
       downloadLink.download = 'qrcode.png';
@@ -425,23 +425,23 @@ const QRCodeGenerator = () => {
       downloadLink.click();
       document.body.removeChild(downloadLink);
       
-      setSuccessMessage('PNG erfolgreich heruntergeladen!');
+      setSuccessMessage('PNG successfully downloaded!');
       setTimeout(() => setSuccessMessage(''), 2000);
     } catch (err) {
-      console.error("Fehler beim PNG-Download:", err);
-      setError("PNG konnte nicht heruntergeladen werden: " + err.message);
+      console.error("Error during PNG download:", err);
+      setError("PNG could not be downloaded: " + err.message);
     }
   };
   
   return (
     <div className="w-full max-w-4xl mx-auto p-4 flex flex-col md:flex-row gap-6">
-      {/* Steuerungselemente */}
+      {/* Controls */}
       <Card className="w-full md:w-1/2 dark:border-gray-700 dark:bg-gray-800">
         <CardHeader>
-          <CardTitle className="dark:text-white">QR-Code Generator</CardTitle>
+          <CardTitle className="dark:text-white">QR Code Generator</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Tabs für verschiedene Einstellungskategorien */}
+          {/* Tabs for different setting categories */}
           <Tabs className="w-full">
             <TabsList className="dark:border-gray-700">
               <TabsTrigger 
@@ -450,7 +450,7 @@ const QRCodeGenerator = () => {
                 className="dark:text-gray-300 dark:hover:text-gray-100"
               >
                 <FileCode className="w-4 h-4 mr-2" />
-                Vorlagen
+                Templates
               </TabsTrigger>
               <TabsTrigger 
                 active={activeTab === 'content'} 
@@ -458,7 +458,7 @@ const QRCodeGenerator = () => {
                 className="dark:text-gray-300 dark:hover:text-gray-100"
               >
                 <ImageIcon className="w-4 h-4 mr-2" />
-                Inhalt
+                Content
               </TabsTrigger>
               <TabsTrigger 
                 active={activeTab === 'design'} 
@@ -474,7 +474,7 @@ const QRCodeGenerator = () => {
                 className="dark:text-gray-300 dark:hover:text-gray-100"
               >
                 <Settings className="w-4 h-4 mr-2" />
-                Einstellungen
+                Settings
               </TabsTrigger>
             </TabsList>
             
@@ -484,26 +484,26 @@ const QRCodeGenerator = () => {
                 <QRCodeTemplates onSelectTemplate={handleSelectTemplate} />
                 <div className="pt-2 mt-2 border-t dark:border-gray-700">
                   <p className="text-sm text-muted-foreground dark:text-gray-400 italic">
-                    Tipp: Nach der Auswahl einer Vorlage kannst Du den Inhalt im "Inhalt"-Tab anpassen.
+                    Tip: After selecting a template, you can customize the content in the "Content" tab.
                   </p>
                 </div>
               </div>
             </TabsContent>
             
-            {/* Inhalt Tab */}
+            {/* Content Tab */}
             <TabsContent active={activeTab === 'content'}>
               <div className="space-y-4 pt-4">
                 {activeTemplateId ? (
-                  // Strukturierte Formularfelder für Templates
+                  // Structured form fields for templates
                   <TemplateFormFields 
                     templateId={activeTemplateId} 
                     initialContent={text}
                     onContentChange={handleContentChangeFromFields}
                   />
                 ) : (
-                  // Allgemeines Textfeld für freien Text
+                  // General text field for free text
                   <div className="space-y-2">
-                    <Label htmlFor="text" className="dark:text-gray-200">Text oder URL</Label>
+                    <Label htmlFor="text" className="dark:text-gray-200">Text or URL</Label>
                     <Input 
                       id="text" 
                       value={text} 
@@ -520,10 +520,10 @@ const QRCodeGenerator = () => {
                       variant="outline" 
                       className="w-full dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600" 
                       onClick={() => {
-                        setActiveTemplateId(''); // Template-Modus zurücksetzen
+                        setActiveTemplateId(''); // Reset template mode
                       }}
                     > 
-                      Zurück zum Freitext-Modus
+                      Back to free text mode
                     </Button>
                   </div>
                 )}
@@ -533,15 +533,15 @@ const QRCodeGenerator = () => {
             {/* Design Tab */}
             <TabsContent active={activeTab === 'design'}>
               <div className="space-y-6 pt-4">
-                {/* Farbschema-Auswahl */}
+                {/* Color scheme selection */}
                 <ColorSchemeSelector onSelectScheme={handleSelectColorScheme} />
                 
-                {/* Manuelle Farbeinstellungen */}
+                {/* Manual color settings */}
                 <div className="border-t dark:border-gray-700 pt-4">
-                  <h3 className="text-sm font-medium mb-4 dark:text-gray-200">Individuelle Farbeinstellungen</h3>
+                  <h3 className="text-sm font-medium mb-4 dark:text-gray-200">Custom Color Settings</h3>
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="fgColor" className="dark:text-gray-200">Vordergrundfarbe</Label>
+                      <Label htmlFor="fgColor" className="dark:text-gray-200">Foreground Color</Label>
                       <div className="flex gap-2">
                         <Input 
                           id="fgColor" 
@@ -559,7 +559,7 @@ const QRCodeGenerator = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="bgColor" className="dark:text-gray-200">Hintergrundfarbe</Label>
+                      <Label htmlFor="bgColor" className="dark:text-gray-200">Background Color</Label>
                       <div className="flex gap-2">
                         <Input 
                           id="bgColor" 
@@ -604,11 +604,11 @@ const QRCodeGenerator = () => {
               </div>
             </TabsContent>
             
-            {/* Einstellungen Tab */}
+            {/* Settings Tab */}
             <TabsContent active={activeTab === 'settings'}>
               <div className="space-y-4 pt-4">
                 <div className="space-y-2">
-                  <Label htmlFor="size" className="dark:text-gray-200">Größe: {size}px</Label>
+                  <Label htmlFor="size" className="dark:text-gray-200">Size: {size}px</Label>
                   <Slider
                     id="size"
                     min={100}
@@ -623,14 +623,14 @@ const QRCodeGenerator = () => {
                 <div className="pt-2">
                   <Button onClick={generateQRCode} className="w-full" disabled={loading}>
                     <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                    Aktualisieren
+                    Refresh
                   </Button>
                 </div>
               </div>
             </TabsContent>
           </Tabs>
           
-          {/* Download-Optionen - immer sichtbar */}
+          {/* Download options - always visible */}
           <div className="pt-4 border-t mt-4 dark:border-gray-700">
             <div className="grid grid-cols-2 gap-2">
               <Button onClick={downloadSVG} className="w-full" disabled={loading || !qrInitialized}>
@@ -645,12 +645,12 @@ const QRCodeGenerator = () => {
             
             {logoType === 'svg' && showLogo && logo && (
               <div className="mt-2 p-2 text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded">
-                <p>Hinweis: SVG-Logos verlieren derzeit im Export ihre Vektoreigenschaften aufgrund technischer Einschränkungen bei SVG-in-SVG-Einbettung.</p>
+                <p>Note: SVG logos currently lose their vector properties in exports due to technical limitations with SVG-in-SVG embedding.</p>
               </div>
             )}
           </div>
           
-          {/* Fehlermeldungen und Erfolgsmeldungen */}
+          {/* Error and success messages */}
           {error && (
             <div className="p-3 rounded bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300 text-sm">
               {error}
@@ -665,10 +665,10 @@ const QRCodeGenerator = () => {
         </CardContent>
       </Card>
       
-      {/* Vorschau */}
+      {/* Preview */}
       <Card className="w-full md:w-1/2 dark:border-gray-700 dark:bg-gray-800">
         <CardHeader>
-          <CardTitle className="dark:text-white">Vorschau</CardTitle>
+          <CardTitle className="dark:text-white">Preview</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center min-h-64">
           {loading ? (
@@ -685,7 +685,7 @@ const QRCodeGenerator = () => {
                   minHeight: `${Math.max(208, size)}px` // Ensures container grows with QR code size
                 }}
               >
-                {!qrInitialized && <p className="text-gray-400 dark:text-gray-500">QR-Code wird geladen...</p>}
+                {!qrInitialized && <p className="text-gray-400 dark:text-gray-500">Loading QR code...</p>}
               </div>
               
               {/* Enhanced Error Correction Level Card */}
@@ -700,8 +700,8 @@ const QRCodeGenerator = () => {
                         'text-green-700'                                   
                       }`} />
                       <span className="font-medium text-sm dark:text-gray-200">
-                        Fehlerkorrektur Level {showLogo && logo ? 'H' : errorCorrectionLevel}
-                        {showLogo && logo && errorCorrectionLevel !== 'H' && ' (automatisch)'}
+                        Error Correction Level {showLogo && logo ? 'H' : errorCorrectionLevel}
+                        {showLogo && logo && errorCorrectionLevel !== 'H' && ' (automatic)'}
                       </span>
                     </div>
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
@@ -720,14 +720,14 @@ const QRCodeGenerator = () => {
                   </div>
                   <p className="text-xs mt-1 text-gray-600 dark:text-gray-300">
                     {(showLogo && logo) ? 
-                      'Höchste Fehlerkorrektur aktiviert für Logo-Integration.' :
+                      'Highest error correction activated for logo integration.' :
                       errorCorrectionLevel === 'L' ? 
-                        'Geringere Fehlerkorrektur, ideal für saubere Umgebungen.' :
+                        'Lower error correction, ideal for clean environments.' :
                       errorCorrectionLevel === 'M' ? 
-                        'Ausgewogene Fehlerkorrektur für allgemeine Anwendungen.' :
+                        'Balanced error correction for general applications.' :
                       errorCorrectionLevel === 'Q' ? 
-                        'Verbesserte Fehlerkorrektur, gut für Außenbereiche.' :
-                        'Höchste Fehlerkorrektur, ideal wenn der QR-Code beschädigt werden könnte.'}
+                        'Enhanced error correction, good for outdoor use.' :
+                        'Highest error correction, ideal when QR code might get damaged.'}
                   </p>
                   <div className="flex mt-2 gap-1">
                     {['L', 'M', 'Q', 'H'].map(level => (

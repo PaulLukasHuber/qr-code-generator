@@ -16,8 +16,8 @@ const ThemeToggle = () => {
       size="icon"
       onClick={toggleTheme}
       className="rounded-full w-9 h-9 p-0"
-      title={theme === 'dark' ? 'Zu hellem Modus wechseln' : 'Zu dunklem Modus wechseln'}
-      aria-label={theme === 'dark' ? 'Zu hellem Modus wechseln' : 'Zu dunklem Modus wechseln'}
+      title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {theme === 'dark' ? (
         <Sun className="h-5 w-5 text-yellow-200" />

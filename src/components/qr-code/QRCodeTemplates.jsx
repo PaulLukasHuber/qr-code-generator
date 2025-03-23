@@ -4,7 +4,7 @@ import { Card } from '../ui/card';
 import { Smartphone, Wifi, Mail, Link, CreditCard, MapPin, Calendar } from 'lucide-react';
 
 /**
- * QR-Code Vorlagen Komponente mit Unterstützung für Dark Mode
+ * QR Code Templates component with dark mode support
  */
 const QRCodeTemplates = ({ onSelectTemplate }) => {
   // Define QR code templates
@@ -14,61 +14,61 @@ const QRCodeTemplates = ({ onSelectTemplate }) => {
       name: 'Website URL',
       icon: <Link />,
       content: 'https://example.com',
-      description: 'Link zu einer Website',
+      description: 'Link to a website',
       fgColor: '#1E3A8A',
       bgColor: '#F8FAFC'
     },
     {
       id: 'wifi',
-      name: 'WLAN-Zugang',
+      name: 'Wi-Fi - Access',
       icon: <Wifi />,
-      content: 'WIFI:S:NetzwerkName;T:WPA;P:passwort;;',
-      description: 'Mit WLAN-Netzwerk verbinden',
+      content: 'WIFI:S:NetworkName;T:WPA;P:password;;',
+      description: 'Connect to Wi-Fi network',
       fgColor: '#065F46',
       bgColor: '#ECFDF5'
     },
     {
       id: 'contact',
-      name: 'Kontaktdaten',
+      name: 'Contact Information',
       icon: <Smartphone />,
-      content: 'MECARD:N:Max Mustermann;TEL:+491234567890;EMAIL:max@beispiel.de;ADR:Musterstraße 123, Stadt;;',
-      description: 'Kontaktdaten teilen',
+      content: 'MECARD:N:John Doe;TEL:+491234567890;EMAIL:john@example.com;ADR:123 Main St, City;;',
+      description: 'Share contact details',
       fgColor: '#9F1239',
       bgColor: '#FFF1F2'
     },
     {
       id: 'email',
-      name: 'E-Mail-Adresse',
+      name: 'Email Address',
       icon: <Mail />,
-      content: 'mailto:beispiel@beispiel.de',
-      description: 'Direkter E-Mail-Link',
+      content: 'mailto:example@example.com',
+      description: 'Direct email link',
       fgColor: '#312E81',
       bgColor: '#E0E7FF'
     },
     {
       id: 'payment',
-      name: 'Krypto Adresse',
+      name: 'Crypto Address',
       icon: <CreditCard />,
       content: 'bitcoin:1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
-      description: 'Kryptowährungs-Adresse',
+      description: 'Cryptocurrency address',
       fgColor: '#000000',
       bgColor: '#FFFF00'
     },
     {
       id: 'location',
-      name: 'Standort',
+      name: 'Location',
       icon: <MapPin />,
       content: 'geo:52.520008,13.404954',
-      description: 'Geografische Koordinaten',
+      description: 'Geographic coordinates',
       fgColor: '#334155',
       bgColor: '#F1F5F9'
     },
     {
       id: 'event',
-      name: 'Kalenderereignis',
+      name: 'Calendar Event',
       icon: <Calendar />,
-      content: 'BEGIN:VEVENT\nSUMMARY:Veranstaltungstitel\nLOCATION:Veranstaltungsort\nDTSTART:20250325T100000Z\nDTEND:20250325T110000Z\nEND:VEVENT',
-      description: 'Ereignis zum Kalender hinzufügen',
+      content: 'BEGIN:VEVENT\nSUMMARY:Event Title\nLOCATION:Event Location\nDTSTART:20250325T100000Z\nDTEND:20250325T110000Z\nEND:VEVENT',
+      description: 'Add event to calendar',
       fgColor: '#000000',
       bgColor: '#FFFFFF'
     }
@@ -76,9 +76,9 @@ const QRCodeTemplates = ({ onSelectTemplate }) => {
 
   return (
     <div className="space-y-4">
-      <Label className="text-base dark:text-gray-200">QR-Code Vorlagen</Label>
+      <Label className="text-base dark:text-gray-200">QR Code Templates</Label>
       <p className="text-sm text-muted-foreground dark:text-gray-400 mb-4">
-        Wähle eine Vorlage für häufig verwendete QR-Code-Anwendungsfälle
+        Choose a template for commonly used QR code applications
       </p>
       
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">

@@ -6,21 +6,21 @@ import { Input } from './input';
 import { Calendar, Clock, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 /**
- * Erweiterter CustomDateTimePicker
+ * Enhanced CustomDateTimePicker
  * 
- * Ein angepasster Datum- und Uhrzeitauswähler mit:
- * - Hierarchischer Monat/Jahr-Navigation
- * - Direkter Texteingabe von Datum und Zeit
- * - Vollständig angepasstem Design
- * - Unterstützung für Dark Mode
+ * A customized date and time picker with:
+ * - Hierarchical month/year navigation
+ * - Direct text input for date and time
+ * - Fully customized design
+ * - Support for dark mode
  * 
- * @param {Object} props - Die Komponenten-Props
- * @param {string} props.id - ID des Elements
- * @param {string} props.label - Beschriftung
- * @param {string} props.value - ISO-8601-Wert (z.B. '20250325T100000Z')
- * @param {Function} props.onChange - Callback bei Änderungen
- * @param {string} props.className - Zusätzliche CSS-Klassen
- * @param {string} props.helperText - Hilfetext unter dem Input
+ * @param {Object} props - Component props
+ * @param {string} props.id - Element ID
+ * @param {string} props.label - Label text
+ * @param {string} props.value - ISO-8601 value (e.g. '20250325T100000Z')
+ * @param {Function} props.onChange - Callback on changes
+ * @param {string} props.className - Additional CSS classes
+ * @param {string} props.helperText - Helper text below the input
  */
 const CustomDateTimePicker = ({ 
   id, 
@@ -30,44 +30,44 @@ const CustomDateTimePicker = ({
   className, 
   helperText
 }) => {
-  // Formatierte Werte für die Anzeige
+  // Formatted values for display
   const [displayValue, setDisplayValue] = useState('');
   
-  // Zustände für die Dropdown-Anzeige
+  // States for dropdown display
   const [showPicker, setShowPicker] = useState(false);
-  const [activeTab, setActiveTab] = useState('date'); // 'date' oder 'time'
+  const [activeTab, setActiveTab] = useState('date'); // 'date' or 'time'
   const [viewMode, setViewMode] = useState('days'); // 'days', 'months', 'years'
   
-  // Refs für Klicks außerhalb
+  // Refs for handling clicks outside
   const pickerRef = useRef(null);
   const inputRef = useRef(null);
   
-  // Aktuelle Datums- und Zeitobjekte
+  // Current date and time objects
   const [selectedDate, setSelectedDate] = useState(new Date());
   
-  // Kalender-Zustand
+  // Calendar state
   const [calendarDays, setCalendarDays] = useState([]);
   const [currentMonth, setCurrentMonth] = useState(0);
   const [currentYear, setCurrentYear] = useState(0);
   const [yearsRange, setYearsRange] = useState([]);
   
-  // Uhrzeit-Werte
+  // Time values
   const [hours, setHours] = useState('12');
   const [minutes, setMinutes] = useState('00');
   
-  // Deutsche Formatierung für Datum/Zeit
-  const dateFormatter = new Intl.DateTimeFormat('de-DE', { 
+  // German formatting for date/time
+  const dateFormatter = new Intl.DateTimeFormat('en-US', { 
     day: '2-digit', 
     month: '2-digit', 
     year: 'numeric'
   });
   
-  const timeFormatter = new Intl.DateTimeFormat('de-DE', {
+  const timeFormatter = new Intl.DateTimeFormat('en-US', {
     hour: '2-digit',
     minute: '2-digit'
   });
   
-  // Konvertiere ISO-String zu Datum/Zeit beim Laden
+  // Convert ISO string to date/time on load
   useEffect(() => {
     if (value) {
       const date = parseISOToDate(value);
@@ -78,7 +78,7 @@ const CustomDateTimePicker = ({
         setCurrentYear(date.getFullYear());
       }
     } else {
-      // Standardwerte für heute setzen
+      // Set default values for today
       const today = new Date();
       setSelectedDate(today);
       setCurrentMonth(today.getMonth());
@@ -87,14 +87,14 @@ const CustomDateTimePicker = ({
     }
   }, [value]);
   
-  // Aktualisiere den Kalender, wenn sich Monat oder Jahr ändern
+  // Update calendar when month or year changes
   useEffect(() => {
     switch (viewMode) {
       case 'days':
         generateCalendarDays(currentYear, currentMonth);
         break;
       case 'months':
-        // Keine zusätzliche Aktion notwendig für Monatsansicht
+        // No additional action needed for month view
         break;
       case 'years':
         generateYearsRange(currentYear);
@@ -102,7 +102,7 @@ const CustomDateTimePicker = ({
     }
   }, [currentMonth, currentYear, viewMode]);
   
-  // Handler für Klicks außerhalb des Pickers
+  // Handler for clicks outside the picker
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (pickerRef.current && 
@@ -119,7 +119,7 @@ const CustomDateTimePicker = ({
     };
   }, []);
   
-  // Formatiere Datum für Anzeige
+  // Format date for display
   const updateDisplayValues = (date) => {
     if (!date) {
       setDisplayValue('');
@@ -129,12 +129,12 @@ const CustomDateTimePicker = ({
     const dateStr = dateFormatter.format(date);
     const timeStr = timeFormatter.format(date);
     
-    setDisplayValue(`${dateStr} um ${timeStr}`);
+    setDisplayValue(`${dateStr} at ${timeStr}`);
     setHours(date.getHours().toString().padStart(2, '0'));
     setMinutes(date.getMinutes().toString().padStart(2, '0'));
   };
   
-  // Generiere Jahre für Jahresansicht
+  // Generate years for year view
   const generateYearsRange = (centerYear) => {
     const startYear = centerYear - 6;
     const years = [];
@@ -146,14 +146,14 @@ const CustomDateTimePicker = ({
     setYearsRange(years);
   };
   
-  // Generiere Kalender-Tage für den angezeigten Monat
+  // Generate calendar days for the displayed month
   const generateCalendarDays = (year, month) => {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstDayOfMonth = new Date(year, month, 1).getDay() || 7; // 0 = Sonntag, wir wollen 7
+    const firstDayOfMonth = new Date(year, month, 1).getDay() || 7; // 0 = Sunday, we want 7
     
     const days = [];
     
-    // Tage vom vorherigen Monat
+    // Days from previous month
     const prevMonthDays = new Date(year, month, 0).getDate();
     for (let i = firstDayOfMonth - 1; i > 0; i--) {
       days.push({
@@ -164,7 +164,7 @@ const CustomDateTimePicker = ({
       });
     }
     
-    // Tage des aktuellen Monats
+    // Days of current month
     for (let i = 1; i <= daysInMonth; i++) {
       days.push({
         day: i,
@@ -174,8 +174,8 @@ const CustomDateTimePicker = ({
       });
     }
     
-    // Tage des nächsten Monats
-    const remainingDays = 42 - days.length; // 6 Wochen * 7 Tage = 42
+    // Days of next month
+    const remainingDays = 42 - days.length; // 6 weeks * 7 days = 42
     for (let i = 1; i <= remainingDays; i++) {
       days.push({
         day: i,
@@ -188,7 +188,7 @@ const CustomDateTimePicker = ({
     setCalendarDays(days);
   };
   
-  // Navigiere durch Jahre und Monate
+  // Navigate through years and months
   const changeMonth = (increment) => {
     let newMonth = currentMonth + increment;
     let newYear = currentYear;
@@ -209,7 +209,7 @@ const CustomDateTimePicker = ({
     setCurrentYear(currentYear + increment);
   };
   
-  // Wähle einen Tag aus
+  // Select a day
   const selectDay = (day) => {
     const newDate = new Date(day.year, day.month, day.day);
     newDate.setHours(parseInt(hours, 10));
@@ -217,23 +217,23 @@ const CustomDateTimePicker = ({
     
     setSelectedDate(newDate);
     updateDisplayValues(newDate);
-    // Wir bleiben im Picker, wechseln aber zur Zeitauswahl
+    // Stay in the picker but switch to time selection
     setActiveTab('time');
   };
   
-  // Wähle einen Monat aus
+  // Select a month
   const selectMonth = (month) => {
     setCurrentMonth(month);
     setViewMode('days');
   };
   
-  // Wähle ein Jahr aus
+  // Select a year
   const selectYear = (year) => {
     setCurrentYear(year);
     setViewMode('months');
   };
   
-  // Aktualisiere die Stunden
+  // Update hours
   const updateHours = (e) => {
     const val = e.target.value;
     if (/^\d{0,2}$/.test(val)) {
@@ -245,7 +245,7 @@ const CustomDateTimePicker = ({
     }
   };
   
-  // Aktualisiere die Minuten
+  // Update minutes
   const updateMinutes = (e) => {
     const val = e.target.value;
     if (/^\d{0,2}$/.test(val)) {
@@ -257,7 +257,7 @@ const CustomDateTimePicker = ({
     }
   };
   
-  // Aktualisiere das ausgewählte Datum/Uhrzeit
+  // Update the selected date/time
   const updateSelectedDateTime = (h, m) => {
     const newDate = new Date(selectedDate);
     newDate.setHours(parseInt(h, 10));
@@ -267,15 +267,15 @@ const CustomDateTimePicker = ({
     updateDisplayValues(newDate);
   };
   
-  // Bestätige die Auswahl und schließe den Picker
+  // Confirm selection and close picker
   const confirmSelection = () => {
-    // Formatiere das Datum im ISO-Format für QR-Codes
+    // Format date in ISO format for QR codes
     const isoValue = formatDateToISO(selectedDate);
     onChange(isoValue);
     setShowPicker(false);
   };
   
-  // Einige vordefinierte Uhrzeiten für schnelle Auswahl
+  // Some predefined times for quick selection
   const quickTimeOptions = [
     { label: '9:00', hours: '09', minutes: '00' },
     { label: '12:00', hours: '12', minutes: '00' },
@@ -284,28 +284,28 @@ const CustomDateTimePicker = ({
     { label: '20:00', hours: '20', minutes: '00' }
   ];
   
-  // Schnell-Auswahl einer Zeit
+  // Quick select a time
   const selectQuickTime = (option) => {
     setHours(option.hours);
     setMinutes(option.minutes);
     updateSelectedDateTime(option.hours, option.minutes);
   };
   
-  // Handler für direkte Texteingabe
+  // Handler for direct text input
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
     setDisplayValue(inputValue);
     
-    // Versuche, die Eingabe zu interpretieren
+    // Try to interpret the input
     try {
-      // Typische deutsche Datums-/Zeitformate: "23.04.2025 um 14:30" oder "23.04.2025 14:30"
-      // Extrahiere Datum und Zeit
-      const dateTimePattern = /(\d{1,2})[.,/](\d{1,2})[.,/](\d{4})(?:\s+(?:um\s+)?(\d{1,2})[:.h](\d{1,2}))?/;
+      // Typical date/time formats: "04/23/2025 at 2:30 PM" or "04/23/2025 14:30"
+      // Extract date and time
+      const dateTimePattern = /(\d{1,2})[.,/](\d{1,2})[.,/](\d{4})(?:\s+(?:at\s+)?(\d{1,2})[:.h](\d{1,2}))?/;
       const match = inputValue.match(dateTimePattern);
       
       if (match) {
-        const day = parseInt(match[1], 10);
-        const month = parseInt(match[2], 10) - 1; // 0-indexiert
+        const month = parseInt(match[1], 10) - 1; // 0-indexed
+        const day = parseInt(match[2], 10);
         const year = parseInt(match[3], 10);
         const hour = match[4] ? parseInt(match[4], 10) : 0;
         const minute = match[5] ? parseInt(match[5], 10) : 0;
@@ -317,7 +317,7 @@ const CustomDateTimePicker = ({
           
           const date = new Date(year, month, day, hour, minute);
           
-          // Überprüfe auf gültiges Datum (berücksichtigt z.B. 30./31. je nach Monat)
+          // Check for valid date (considers e.g. 30/31 depending on month)
           if (!isNaN(date.getTime())) {
             setSelectedDate(date);
             setCurrentMonth(month);
@@ -325,42 +325,42 @@ const CustomDateTimePicker = ({
             setHours(hour.toString().padStart(2, '0'));
             setMinutes(minute.toString().padStart(2, '0'));
             
-            // Aktualisiere ISO-Wert
+            // Update ISO value
             const isoValue = formatDateToISO(date);
             onChange(isoValue);
           }
         }
       }
     } catch (error) {
-      console.error("Fehler beim Parsen der Datumseingabe:", error);
-      // Bei Fehler Eingabe nicht zurücksetzen, um Benutzerkorrektur zu ermöglichen
+      console.error("Error parsing date input:", error);
+      // Don't reset input on error to allow user correction
     }
   };
   
-  // Hilfsfunktionen für Datums-/Zeitformate
+  // Helper functions for date/time formats
   
-  // ISO-Wert zu Datumsobjekt
+  // ISO value to date object
   const parseISOToDate = (isoString) => {
     try {
       if (!isoString) return new Date();
       
-      // Typisches Format: 20250325T100000Z
+      // Typical format: 20250325T100000Z
       const cleanStr = isoString.replace('Z', '');
       
       const year = parseInt(cleanStr.substring(0, 4), 10);
-      const month = parseInt(cleanStr.substring(4, 6), 10) - 1; // 0-indexiert
+      const month = parseInt(cleanStr.substring(4, 6), 10) - 1; // 0-indexed
       const day = parseInt(cleanStr.substring(6, 8), 10);
       const hour = parseInt(cleanStr.substring(9, 11), 10) || 0;
       const minute = parseInt(cleanStr.substring(11, 13), 10) || 0;
       
       return new Date(year, month, day, hour, minute);
     } catch (error) {
-      console.error("Fehler beim Parsen des ISO-Datums:", error);
+      console.error("Error parsing ISO date:", error);
       return new Date();
     }
   };
   
-  // Datumsobjekt zu ISO-Format
+  // Date object to ISO format
   const formatDateToISO = (date) => {
     try {
       const year = date.getFullYear();
@@ -371,26 +371,26 @@ const CustomDateTimePicker = ({
       
       return `${year}${month}${day}T${hour}${minute}00Z`;
     } catch (error) {
-      console.error("Fehler beim Formatieren zum ISO-Format:", error);
+      console.error("Error formatting to ISO format:", error);
       return '';
     }
   };
   
-  // Wochentage für Kalender-Kopf
-  const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+  // Weekdays for calendar header
+  const weekdays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
   
-  // Monatsnamen
+  // Month names
   const monthNames = [
-    'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
-    'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
   ];
   
   const monthNamesShort = [
-    'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
   ];
   
-  // Prüfe, ob ein Datum der heutige Tag ist
+  // Check if a date is today
   const isToday = (day) => {
     const today = new Date();
     return day.day === today.getDate() && 
@@ -398,7 +398,7 @@ const CustomDateTimePicker = ({
            day.year === today.getFullYear();
   };
   
-  // Prüfe, ob ein Datum ausgewählt ist
+  // Check if a date is selected
   const isSelected = (day) => {
     return day.day === selectedDate.getDate() && 
            day.month === selectedDate.getMonth() && 
@@ -409,7 +409,7 @@ const CustomDateTimePicker = ({
     <div className="space-y-2 relative">
       {label && <Label htmlFor={id} className="dark:text-gray-200">{label}</Label>}
       
-      {/* Anzeige des ausgewählten Datums - jetzt als editierbares Eingabefeld */}
+      {/* Display selected date - now as editable input field */}
       <div 
         className={cn(
           "flex h-10 w-full rounded-md border border-input bg-transparent text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 dark:border-gray-600",
@@ -423,7 +423,7 @@ const CustomDateTimePicker = ({
             id={id}
             value={displayValue}
             onChange={handleInputChange}
-            placeholder="TT.MM.JJJJ HH:MM"
+            placeholder="MM/DD/YYYY HH:MM"
             className="h-full border-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
             onFocus={() => setShowPicker(true)}
           />
@@ -453,7 +453,7 @@ const CustomDateTimePicker = ({
         <p className="text-xs text-muted-foreground dark:text-gray-400">{helperText}</p>
       )}
       
-      {/* Datum/Zeit-Picker Dropdown */}
+      {/* Date/Time picker dropdown */}
       {showPicker && (
         <div 
           ref={pickerRef}
@@ -466,24 +466,24 @@ const CustomDateTimePicker = ({
               className={`pb-2 px-3 ${activeTab === 'date' ? 'border-b-2 border-primary font-medium dark:text-white' : 'text-muted-foreground dark:text-gray-400'}`}
               onClick={() => setActiveTab('date')}
             >
-              Datum
+              Date
             </button>
             <button
               type="button"
               className={`pb-2 px-3 ${activeTab === 'time' ? 'border-b-2 border-primary font-medium dark:text-white' : 'text-muted-foreground dark:text-gray-400'}`}
               onClick={() => setActiveTab('time')}
             >
-              Uhrzeit
+              Time
             </button>
           </div>
           
-          {/* Datum-Tab */}
+          {/* Date tab */}
           {activeTab === 'date' && (
             <div>
-              {/* Tagesansicht */}
+              {/* Day view */}
               {viewMode === 'days' && (
                 <>
-                  {/* Monat/Jahr-Navigation */}
+                  {/* Month/Year navigation */}
                   <div className="flex justify-between items-center mb-2">
                     <button
                       type="button"
@@ -493,7 +493,7 @@ const CustomDateTimePicker = ({
                       <ChevronLeft className="h-4 w-4" />
                     </button>
                     
-                    {/* Klickbarer Monat/Jahr-Header */}
+                    {/* Clickable month/year header */}
                     <button
                       type="button"
                       className="font-medium hover:text-primary dark:text-gray-200 dark:hover:text-primary"
@@ -511,7 +511,7 @@ const CustomDateTimePicker = ({
                     </button>
                   </div>
                   
-                  {/* Wochentage */}
+                  {/* Weekdays */}
                   <div className="grid grid-cols-7 gap-1 mb-1">
                     {weekdays.map((day) => (
                       <div key={day} className="text-center text-xs font-medium text-muted-foreground dark:text-gray-400 py-1">
@@ -520,7 +520,7 @@ const CustomDateTimePicker = ({
                     ))}
                   </div>
                   
-                  {/* Kalendertage */}
+                  {/* Calendar days */}
                   <div className="grid grid-cols-7 gap-1">
                     {calendarDays.map((day, index) => (
                       <button
@@ -542,10 +542,10 @@ const CustomDateTimePicker = ({
                 </>
               )}
               
-              {/* Monatsansicht */}
+              {/* Month view */}
               {viewMode === 'months' && (
                 <>
-                  {/* Jahr-Navigation */}
+                  {/* Year navigation */}
                   <div className="flex justify-between items-center mb-4">
                     <button
                       type="button"
@@ -555,7 +555,7 @@ const CustomDateTimePicker = ({
                       <ChevronLeft className="h-4 w-4" />
                     </button>
                     
-                    {/* Klickbares Jahr */}
+                    {/* Clickable year */}
                     <button
                       type="button"
                       className="font-medium hover:text-primary dark:text-gray-200 dark:hover:text-primary"
@@ -573,7 +573,7 @@ const CustomDateTimePicker = ({
                     </button>
                   </div>
                   
-                  {/* Monate */}
+                  {/* Months */}
                   <div className="grid grid-cols-3 gap-2">
                     {monthNamesShort.map((month, index) => (
                       <button
@@ -592,10 +592,10 @@ const CustomDateTimePicker = ({
                 </>
               )}
               
-              {/* Jahresansicht */}
+              {/* Year view */}
               {viewMode === 'years' && (
                 <>
-                  {/* Jahresbereich-Navigation */}
+                  {/* Year range navigation */}
                   <div className="flex justify-between items-center mb-4">
                     <button
                       type="button"
@@ -618,7 +618,7 @@ const CustomDateTimePicker = ({
                     </button>
                   </div>
                   
-                  {/* Jahre */}
+                  {/* Years */}
                   <div className="grid grid-cols-3 gap-2">
                     {yearsRange.map((year) => (
                       <button
@@ -639,10 +639,10 @@ const CustomDateTimePicker = ({
             </div>
           )}
           
-          {/* Zeit-Tab */}
+          {/* Time tab */}
           {activeTab === 'time' && (
             <div>
-              {/* Stunden/Minuten-Einstellung */}
+              {/* Hours/minutes setting */}
               <div className="flex justify-center items-center mb-4 space-x-2">
                 <Input
                   type="text"
@@ -661,7 +661,7 @@ const CustomDateTimePicker = ({
                 />
               </div>
               
-              {/* Schnellauswahl für häufige Zeiten */}
+              {/* Quick selection for common times */}
               <div className="grid grid-cols-3 gap-2 mb-4">
                 {quickTimeOptions.map((option) => (
                   <button
@@ -680,7 +680,7 @@ const CustomDateTimePicker = ({
             </div>
           )}
           
-          {/* Aktionsschaltflächen */}
+          {/* Action buttons */}
           <div className="flex justify-end space-x-2 mt-4 pt-2 border-t dark:border-gray-700">
             <Button
               type="button"
@@ -689,14 +689,14 @@ const CustomDateTimePicker = ({
               onClick={() => setShowPicker(false)}
               className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600"
             >
-              Abbrechen
+              Cancel
             </Button>
             <Button
               type="button"
               size="sm"
               onClick={confirmSelection}
             >
-              Übernehmen
+              Apply
             </Button>
           </div>
         </div>

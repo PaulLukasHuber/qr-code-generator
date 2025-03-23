@@ -5,31 +5,31 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { CustomDateTimePicker } from '../ui/custom-date-time-picker';
 
 /**
- * Komponente für dynamische Formularfelder basierend auf QR-Code Vorlagen.
- * Zeigt unterschiedliche Eingabefelder je nach ausgewähltem Template an.
- * Mit Unterstützung für Dark Mode.
+ * Component for dynamic form fields based on QR code templates.
+ * Displays different input fields depending on the selected template.
+ * With support for dark mode.
  * 
- * @param {Object} props - Komponenten-Props
- * @param {string} props.templateId - ID des ausgewählten Templates
- * @param {string} props.initialContent - Initialer Inhalt für die Felder
- * @param {Function} props.onContentChange - Callback-Funktion, die bei Änderungen aufgerufen wird
+ * @param {Object} props - Component props
+ * @param {string} props.templateId - ID of the selected template
+ * @param {string} props.initialContent - Initial content for the fields
+ * @param {Function} props.onContentChange - Callback function called on changes
  */
 const TemplateFormFields = ({ templateId, initialContent, onContentChange }) => {
-  // Zustand für die Formularfelder
+  // State for form fields
   const [formFields, setFormFields] = useState({});
-  // Flag, um zu verfolgen, ob die Initialisierung abgeschlossen ist
+  // Flag to track if initialization is complete
   const [isInitialized, setIsInitialized] = useState(false);
   
-  // Template-Felder parsen - nur einmal bei der Initialisierung oder wenn sich das Template ändert
+  // Parse template fields - only once during initialization or when the template changes
   useEffect(() => {
     if (templateId && initialContent) {
       const parsedFields = parseTemplateContent(templateId, initialContent);
       setFormFields(parsedFields);
       setIsInitialized(true);
     }
-  }, [templateId]); // Abhängigkeit nur von templateId, nicht von initialContent
+  }, [templateId]); // Dependency only on templateId, not on initialContent
   
-  // Aktualisiere QR-Code bei Änderungen, aber nur wenn die Initialisierung abgeschlossen ist
+  // Update QR code on changes, but only if initialization is complete
   useEffect(() => {
     if (isInitialized && Object.keys(formFields).length > 0) {
       const formattedContent = formatTemplateContent(templateId, formFields);
@@ -37,7 +37,7 @@ const TemplateFormFields = ({ templateId, initialContent, onContentChange }) => 
     }
   }, [formFields, templateId, isInitialized, onContentChange]);
   
-  // Aktualisiert ein einzelnes Feld
+  // Update a single field
   const handleFieldChange = (fieldName, value) => {
     setFormFields(prev => ({
       ...prev,
@@ -45,7 +45,7 @@ const TemplateFormFields = ({ templateId, initialContent, onContentChange }) => 
     }));
   };
   
-  // Formatiert den QR-Code-Inhalt basierend auf Template und Formularfeldern
+  // Format QR code content based on template and form fields
   const formatTemplateContent = (templateId, fields) => {
     switch (templateId) {
       case 'website':
@@ -79,9 +79,9 @@ END:VEVENT`;
     }
   };
   
-  // Parst den bestehenden Inhalt in einzelne Felder
+  // Parse existing content into individual fields
   const parseTemplateContent = (templateId, content) => {
-    // Standardwerte für jede Vorlage - werden als Fallback verwendet
+    // Default values for each template - used as fallback
     const defaultValues = {
       website: { url: 'https://' },
       wifi: { ssid: '', security: 'WPA', password: '' },
@@ -190,13 +190,13 @@ END:VEVENT`;
           return {};
       }
     } catch (error) {
-      console.error("Fehler beim Parsen des Template-Inhalts:", error);
-      // Fallback zu Standard-Werten für dieses Template
+      console.error("Error parsing template content:", error);
+      // Fall back to default values for this template
       return defaultValues[templateId] || {};
     }
   };
   
-  // Rendert unterschiedliche Formularfelder basierend auf dem Template
+  // Render different form fields based on the template
   const renderFormFields = () => {
     switch (templateId) {
       case 'website':
@@ -219,41 +219,41 @@ END:VEVENT`;
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="wifi-ssid" className="dark:text-gray-200">Netzwerkname (SSID)</Label>
+              <Label htmlFor="wifi-ssid" className="dark:text-gray-200">Network Name (SSID)</Label>
               <Input 
                 id="wifi-ssid"
                 value={formFields.ssid || ''}
                 onChange={(e) => handleFieldChange('ssid', e.target.value)}
-                placeholder="WLAN-Netzwerkname"
+                placeholder="Wi-Fi network name"
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="wifi-security" className="dark:text-gray-200">Sicherheitstyp</Label>
+              <Label htmlFor="wifi-security" className="dark:text-gray-200">Security Type</Label>
               <Select 
                 value={formFields.security || 'WPA'} 
                 onValueChange={(value) => handleFieldChange('security', value)}
               >
                 <SelectTrigger id="wifi-security" className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
-                  <SelectValue placeholder="Sicherheitstyp wählen" />
+                  <SelectValue placeholder="Choose security type" />
                 </SelectTrigger>
                 <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
                   <SelectItem value="WPA" className="dark:text-gray-200 dark:focus:bg-gray-700">WPA/WPA2/WPA3</SelectItem>
                   <SelectItem value="WEP" className="dark:text-gray-200 dark:focus:bg-gray-700">WEP</SelectItem>
-                  <SelectItem value="nopass" className="dark:text-gray-200 dark:focus:bg-gray-700">Kein Passwort</SelectItem>
+                  <SelectItem value="nopass" className="dark:text-gray-200 dark:focus:bg-gray-700">No Password</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="wifi-password" className="dark:text-gray-200">Passwort</Label>
+              <Label htmlFor="wifi-password" className="dark:text-gray-200">Password</Label>
               <Input 
                 id="wifi-password"
                 type="password"
                 value={formFields.password || ''}
                 onChange={(e) => handleFieldChange('password', e.target.value)}
-                placeholder="WLAN-Passwort"
+                placeholder="Wi-Fi password"
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
@@ -269,13 +269,13 @@ END:VEVENT`;
                 id="contact-name"
                 value={formFields.name || ''}
                 onChange={(e) => handleFieldChange('name', e.target.value)}
-                placeholder="Max Mustermann"
+                placeholder="John Doe"
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="contact-phone" className="dark:text-gray-200">Telefonnummer</Label>
+              <Label htmlFor="contact-phone" className="dark:text-gray-200">Phone Number</Label>
               <Input 
                 id="contact-phone"
                 value={formFields.phone || ''}
@@ -286,23 +286,23 @@ END:VEVENT`;
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="contact-email" className="dark:text-gray-200">E-Mail</Label>
+              <Label htmlFor="contact-email" className="dark:text-gray-200">Email</Label>
               <Input 
                 id="contact-email"
                 value={formFields.email || ''}
                 onChange={(e) => handleFieldChange('email', e.target.value)}
-                placeholder="beispiel@email.de"
+                placeholder="example@email.com"
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="contact-address" className="dark:text-gray-200">Adresse</Label>
+              <Label htmlFor="contact-address" className="dark:text-gray-200">Address</Label>
               <Input 
                 id="contact-address"
                 value={formFields.address || ''}
                 onChange={(e) => handleFieldChange('address', e.target.value)}
-                placeholder="Musterstraße 123, 12345 Berlin"
+                placeholder="123 Main St, 12345 City"
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
@@ -313,23 +313,23 @@ END:VEVENT`;
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email-address" className="dark:text-gray-200">E-Mail-Adresse</Label>
+              <Label htmlFor="email-address" className="dark:text-gray-200">Email Address</Label>
               <Input 
                 id="email-address"
                 value={formFields.email || ''}
                 onChange={(e) => handleFieldChange('email', e.target.value)}
-                placeholder="beispiel@email.de"
+                placeholder="example@email.com"
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="email-subject" className="dark:text-gray-200">Betreff (optional)</Label>
+              <Label htmlFor="email-subject" className="dark:text-gray-200">Subject (optional)</Label>
               <Input 
                 id="email-subject"
                 value={formFields.subject || ''}
                 onChange={(e) => handleFieldChange('subject', e.target.value)}
-                placeholder="Dein Betreff hier"
+                placeholder="Your subject here"
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
@@ -340,7 +340,7 @@ END:VEVENT`;
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="payment-address" className="dark:text-gray-200">Bitcoin-Adresse</Label>
+              <Label htmlFor="payment-address" className="dark:text-gray-200">Bitcoin Address</Label>
               <Input 
                 id="payment-address"
                 value={formFields.address || ''}
@@ -351,7 +351,7 @@ END:VEVENT`;
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="payment-amount" className="dark:text-gray-200">Betrag (optional)</Label>
+              <Label htmlFor="payment-amount" className="dark:text-gray-200">Amount (optional)</Label>
               <Input 
                 id="payment-amount"
                 type="number"
@@ -369,7 +369,7 @@ END:VEVENT`;
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="location-latitude" className="dark:text-gray-200">Breitengrad</Label>
+              <Label htmlFor="location-latitude" className="dark:text-gray-200">Latitude</Label>
               <Input 
                 id="location-latitude"
                 value={formFields.latitude || ''}
@@ -380,7 +380,7 @@ END:VEVENT`;
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="location-longitude" className="dark:text-gray-200">Längengrad</Label>
+              <Label htmlFor="location-longitude" className="dark:text-gray-200">Longitude</Label>
               <Input 
                 id="location-longitude"
                 value={formFields.longitude || ''}
@@ -396,47 +396,47 @@ END:VEVENT`;
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="event-title" className="dark:text-gray-200">Titel</Label>
+              <Label htmlFor="event-title" className="dark:text-gray-200">Title</Label>
               <Input 
                 id="event-title"
                 value={formFields.title || ''}
                 onChange={(e) => handleFieldChange('title', e.target.value)}
-                placeholder="Besprechung"
+                placeholder="Meeting"
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="event-location" className="dark:text-gray-200">Ort</Label>
+              <Label htmlFor="event-location" className="dark:text-gray-200">Location</Label>
               <Input 
                 id="event-location"
                 value={formFields.location || ''}
                 onChange={(e) => handleFieldChange('location', e.target.value)}
-                placeholder="Konferenzraum A"
+                placeholder="Conference Room A"
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
             
-            {/* Benutzerdefinierter Datum/Zeit-Auswähler für Beginn */}
+            {/* Custom date/time picker for start */}
             <div className="dark:text-gray-200">
               <CustomDateTimePicker
                 id="event-start"
-                label="Beginn"
+                label="Start"
                 value={formFields.start || ''}
                 onChange={(value) => handleFieldChange('start', value)}
-                helperText="Datum und Uhrzeit des Beginns"
+                helperText="Start date and time"
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
               />
             </div>
             
-            {/* Benutzerdefinierter Datum/Zeit-Auswähler für Ende */}
+            {/* Custom date/time picker for end */}
             <div className="dark:text-gray-200">
               <CustomDateTimePicker
                 id="event-end"
-                label="Ende"
+                label="End"
                 value={formFields.end || ''}
                 onChange={(value) => handleFieldChange('end', value)}
-                helperText="Datum und Uhrzeit des Endes"
+                helperText="End date and time"
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
               />
             </div>
@@ -447,14 +447,14 @@ END:VEVENT`;
         return (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground dark:text-gray-400">
-              Bitte wählen Sie eine Vorlage aus dem Templates-Tab.
+              Please select a template from the Templates tab.
             </p>
           </div>
         );
     }
   };
   
-  // Render der passenden Formularfelder
+  // Render the appropriate form fields
   return (
     <div className="space-y-4">
       {renderFormFields()}

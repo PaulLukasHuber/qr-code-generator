@@ -16,7 +16,7 @@ function App() {
         </header>
         
         <main>
-          <Suspense fallback={<div className="text-center p-8 text-gray-800 dark:text-gray-300">Lade QR-Code Generator...</div>}>
+          <Suspense fallback={<div className="text-center p-8 text-gray-800 dark:text-gray-300">Loading QR Code Generator...</div>}>
             <QRCodeGenerator />
           </Suspense>
         </main>

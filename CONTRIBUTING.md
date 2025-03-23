@@ -74,12 +74,6 @@ npm run dev
 - Follow the existing class naming patterns
 - Use CSS variables for theming
 
-## Testing
-
-- Write tests for new functionality
-- Make sure all tests pass before submitting a PR
-- Run tests with `npm test`
-
 ## Documentation
 
 - Update documentation for any changed functionality

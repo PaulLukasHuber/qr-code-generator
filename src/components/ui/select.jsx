@@ -2,28 +2,28 @@ import React, { createContext, useContext, useState, useRef, useEffect } from "r
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 
-// Erstellen eines Contexts für die Select-Komponente
+// Create a context for the Select component
 const SelectContext = createContext(null);
 
 /**
- * Hauptkomponente für das Select-Element
- * Verwaltet den Status und bietet Context für Unterkomponenten
+ * Main component for the Select element
+ * Manages state and provides context for child components
  */
 const Select = ({ children, value, onValueChange, disabled }) => {
-  // State für geöffnet/geschlossen Status
+  // State for open/closed status
   const [isOpen, setIsOpen] = useState(false);
   
-  // Callback zum Umschalten des Dropdown-Zustands
+  // Callback to toggle dropdown state
   const toggleOpen = () => {
     if (!disabled) {
       setIsOpen(prev => !prev);
     }
   };
   
-  // Callback zum Schließen des Dropdowns
+  // Callback to close the dropdown
   const close = () => setIsOpen(false);
   
-  // Callback für die Wertauswahl
+  // Callback for value selection
   const handleValueChange = (newValue) => {
     if (onValueChange) {
       onValueChange(newValue);
@@ -31,7 +31,7 @@ const Select = ({ children, value, onValueChange, disabled }) => {
     close();
   };
   
-  // Kontext bereitstellen
+  // Provide context
   const contextValue = {
     value,
     isOpen,
@@ -51,7 +51,7 @@ const Select = ({ children, value, onValueChange, disabled }) => {
 };
 
 /**
- * Trigger-Komponente (Button zum Öffnen des Dropdowns)
+ * Trigger component (button to open the dropdown)
  */
 const SelectTrigger = React.forwardRef(({ className, children, ...props }, ref) => {
   const { toggleOpen, value, isOpen, disabled } = useContext(SelectContext);
@@ -77,7 +77,7 @@ const SelectTrigger = React.forwardRef(({ className, children, ...props }, ref) 
 SelectTrigger.displayName = "SelectTrigger";
 
 /**
- * Value-Komponente (zeigt den ausgewählten Wert an)
+ * Value component (displays the selected value)
  */
 const SelectValue = React.forwardRef(({ className, placeholder, ...props }, ref) => {
   const { value } = useContext(SelectContext);
@@ -95,13 +95,13 @@ const SelectValue = React.forwardRef(({ className, placeholder, ...props }, ref)
 SelectValue.displayName = "SelectValue";
 
 /**
- * Content-Komponente (Container für die Dropdown-Optionen)
+ * Content component (container for dropdown options)
  */
 const SelectContent = React.forwardRef(({ className, children, ...props }, ref) => {
   const { isOpen, close } = useContext(SelectContext);
   const contentRef = useRef(null);
   
-  // Schließt das Dropdown wenn außerhalb geklickt wird
+  // Close dropdown when clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (contentRef.current && !contentRef.current.contains(event.target)) {
@@ -136,7 +136,7 @@ const SelectContent = React.forwardRef(({ className, children, ...props }, ref) 
 SelectContent.displayName = "SelectContent";
 
 /**
- * Item-Komponente (einzelne Option im Dropdown)
+ * Item component (individual option in dropdown)
  */
 const SelectItem = React.forwardRef(({ className, children, value, ...props }, ref) => {
   const { value: selectedValue, onValueChange } = useContext(SelectContext);

@@ -26,7 +26,7 @@ const LogoConfigSection = ({
   setUseCustomBackground,
   errorCorrectionLevel,
   setErrorCorrectionLevel,
-  // Neue Props für SVG-Support
+  // New props for SVG support
   logoType,
   setLogoType,
   logoSvgContent,
@@ -39,29 +39,29 @@ const LogoConfigSection = ({
     const file = e.target.files[0];
     if (!file) return;
 
-    // Nur Bilddateien akzeptieren
+    // Only accept image files
     if (!file.type.startsWith('image/')) {
-      alert('Bitte wählen Sie eine Bilddatei aus.');
+      alert('Please select an image file.');
       return;
     }
 
-    // Prüfen, ob es sich um eine SVG-Datei handelt
+    // Check if it's an SVG file
     const isSvg = file.type === 'image/svg+xml';
     
     const reader = new FileReader();
     
     if (isSvg) {
-      // Für SVG-Dateien lesen wir den Textinhalt
+      // For SVG files, we read the text content
       reader.onload = (event) => {
         const svgContent = event.target.result;
         setLogoType('svg');
         setLogoSvgContent(svgContent);
         
-        // Weiterhin als DataURL für die Canvas-Vorschau
+        // Still use as DataURL for the canvas preview
         const dataUrl = URL.createObjectURL(file);
         setLogo(dataUrl);
         
-        // UI-Zustände aktualisieren
+        // Update UI states
         setShowLogo(true);
         if (errorCorrectionLevel !== 'H') {
           setErrorCorrectionLevel('H');
@@ -69,13 +69,13 @@ const LogoConfigSection = ({
       };
       reader.readAsText(file);
     } else {
-      // Für alle anderen Bildtypen wie bisher vorgehen
+      // For all other image types, proceed as before
       reader.onload = (event) => {
         setLogoType('raster');
         setLogoSvgContent(null);
         setLogo(event.target.result);
         
-        // UI-Zustände aktualisieren
+        // Update UI states
         setShowLogo(true);
         if (errorCorrectionLevel !== 'H') {
           setErrorCorrectionLevel('H');
@@ -104,7 +104,7 @@ const LogoConfigSection = ({
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <Label className="text-base font-medium dark:text-gray-200">Logo-Integration</Label>
+        <Label className="text-base font-medium dark:text-gray-200">Logo Integration</Label>
         <Switch 
           checked={showLogo} 
           onCheckedChange={setShowLogo}
@@ -121,10 +121,10 @@ const LogoConfigSection = ({
           >
             <ImagePlus className="w-10 h-10 text-gray-400 dark:text-gray-500 mb-2" />
             <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-              Klicken Sie hier, um ein Logo hochzuladen
+              Click here to upload a logo
             </p>
             <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-1">
-              Empfohlen: PNG oder SVG mit transparentem Hintergrund
+              Recommended: PNG or SVG with transparent background
             </p>
             <Input
               ref={fileInputRef}
@@ -138,7 +138,7 @@ const LogoConfigSection = ({
           <div className="rounded-md border dark:border-gray-700 overflow-hidden">
             <div className="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-800 border-b dark:border-gray-700">
               <span className="text-sm font-medium dark:text-gray-200">
-                Hochgeladenes Logo {logoType === 'svg' ? '(SVG)' : ''}
+                Uploaded Logo {logoType === 'svg' ? '(SVG)' : ''}
               </span>
               <Button
                 variant="ghost"
@@ -176,11 +176,11 @@ const LogoConfigSection = ({
             {/* Logo size slider */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <Label htmlFor="logo-size" className="text-sm dark:text-gray-200">Logo-Größe: {logoSize}%</Label>
+                <Label htmlFor="logo-size" className="text-sm dark:text-gray-200">Logo Size: {logoSize}%</Label>
                 {logoSize > 30 && (
                   <div className="flex items-center text-amber-500 text-xs gap-1">
                     <AlertTriangle className="h-3 w-3" />
-                    <span>Große Logos können die Lesbarkeit beeinträchtigen</span>
+                    <span>Large logos may affect readability</span>
                   </div>
                 )}
               </div>
@@ -197,7 +197,7 @@ const LogoConfigSection = ({
 
             {/* Logo shape selection */}
             <div className="space-y-2">
-              <Label htmlFor="logo-shape" className="text-sm dark:text-gray-200">Logo-Form</Label>
+              <Label htmlFor="logo-shape" className="text-sm dark:text-gray-200">Logo Shape</Label>
               <div className="flex gap-2">
                 <Button
                   type="button"
@@ -206,7 +206,7 @@ const LogoConfigSection = ({
                   onClick={() => setLogoShape('square')}
                 >
                   <Square className="h-4 w-4" />
-                  <span>Quadrat</span>
+                  <span>Square</span>
                 </Button>
                 <Button
                   type="button"
@@ -215,7 +215,7 @@ const LogoConfigSection = ({
                   onClick={() => setLogoShape('roundedSquare')}
                 >
                   <CheckSquare className="h-4 w-4" />
-                  <span>Abgerundet</span>
+                  <span>Rounded</span>
                 </Button>
                 <Button
                   type="button"
@@ -224,7 +224,7 @@ const LogoConfigSection = ({
                   onClick={() => setLogoShape('circle')}
                 >
                   <Circle className="h-4 w-4" />
-                  <span>Kreis</span>
+                  <span>Circle</span>
                 </Button>
               </div>
             </div>
@@ -232,7 +232,7 @@ const LogoConfigSection = ({
             {/* Logo background options */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <Label className="text-sm dark:text-gray-200">Hintergrund anpassen</Label>
+                <Label className="text-sm dark:text-gray-200">Customize Background</Label>
                 <Switch 
                   checked={useCustomBackground} 
                   onCheckedChange={setUseCustomBackground}
@@ -251,7 +251,7 @@ const LogoConfigSection = ({
                     value={logoBackground} 
                     onChange={(e) => setLogoBackground(e.target.value)} 
                     className="flex-1 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                    placeholder="z.B. #FFFFFF oder transparent"
+                    placeholder="e.g. #FFFFFF or transparent"
                   />
                 </div>
               )}
@@ -264,14 +264,14 @@ const LogoConfigSection = ({
           <div className="rounded-md bg-blue-50 dark:bg-blue-900/20 p-3 text-sm flex items-start gap-2">
             <Shield className="h-5 w-5 text-blue-500 dark:text-blue-400 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-blue-700 dark:text-blue-300 font-medium">QR-Code mit Logo</p>
+              <p className="text-blue-700 dark:text-blue-300 font-medium">QR Code with Logo</p>
               <p className="text-blue-600 dark:text-blue-400 mt-1">
-                Bei Verwendung eines Logos wird automatisch die höchste Fehlerkorrektur-Stufe (H) aktiviert, 
-                um die Lesbarkeit sicherzustellen.
+                When using a logo, the highest error correction level (H) is automatically 
+                activated to ensure readability.
               </p>
               {logoType === 'svg' && (
                 <p className="text-blue-600 dark:text-blue-400 mt-1">
-                  SVG-Logos werden beim SVG-Export in höchster Qualität als Vektoren beibehalten.
+                  SVG logos maintain their vector quality during SVG export.
                 </p>
               )}
             </div>

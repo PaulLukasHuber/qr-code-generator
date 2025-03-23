@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-// Tabs Container Komponente
+// Tabs Container component
 const Tabs = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
@@ -11,7 +11,7 @@ const Tabs = React.forwardRef(({ className, ...props }, ref) => (
 ));
 Tabs.displayName = "Tabs";
 
-// Tab-Liste Komponente
+// Tab List component
 const TabsList = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
@@ -24,7 +24,7 @@ const TabsList = React.forwardRef(({ className, ...props }, ref) => (
 ));
 TabsList.displayName = "TabsList";
 
-// Tab Trigger Komponente (die Tabs selbst)
+// Tab Trigger component (the tabs themselves)
 const TabsTrigger = React.forwardRef(({ className, active, ...props }, ref) => (
   <button
     ref={ref}
@@ -40,7 +40,7 @@ const TabsTrigger = React.forwardRef(({ className, active, ...props }, ref) => (
 ));
 TabsTrigger.displayName = "TabsTrigger";
 
-// Tab Content Komponente
+// Tab Content component
 const TabsContent = React.forwardRef(({ className, active, ...props }, ref) => (
   <div
     ref={ref}
