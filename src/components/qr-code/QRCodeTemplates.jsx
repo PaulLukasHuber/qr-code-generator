@@ -1,7 +1,7 @@
 import React from 'react';
 import { Label } from '../ui/label';
 import { Card } from '../ui/card';
-import { Smartphone, Wifi, Mail, Link, CreditCard, MapPin, Calendar } from 'lucide-react';
+import { Smartphone, Wifi, Mail, Link, CreditCard, MapPin, Calendar, MessageSquare, Download } from 'lucide-react';
 
 /**
  * QR Code Templates component with dark mode support
@@ -71,6 +71,24 @@ const QRCodeTemplates = ({ onSelectTemplate }) => {
       description: 'Add event to calendar',
       fgColor: '#000000',
       bgColor: '#FFFFFF'
+    },
+    {
+      id: 'sms',
+      name: 'SMS Message',
+      icon: <MessageSquare />, // Using the MessageSquare icon from Lucide
+      content: 'SMSTO:+491234567890:Your message text here',
+      description: 'Send a pre-composed text message',
+      fgColor: '#6D28D9', // Purple shade
+      bgColor: '#F5F3FF'  // Light purple background
+    },
+    {
+      id: 'app',
+      name: 'App Download',
+      icon: <Download />, // Using the Download icon from Lucide
+      content: 'https://example.com/app\n\nAndroid: https://play.google.com/store/apps/details?id=com.example.app\n\niOS: https://apps.apple.com/app/id1234567890',
+      description: 'Direct users to download your app',
+      fgColor: '#059669', // Green shade
+      bgColor: '#ECFDF5'  // Light mint background
     }
   ];
 
