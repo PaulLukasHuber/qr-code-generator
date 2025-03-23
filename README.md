@@ -20,17 +20,20 @@
   <a href="#-deutsch">Deutsch 🇩🇪</a>
 </div>
 <div align="center">
-  <p>
-    <img src="/public/images/light-mode.png" alt="QR Code Generator Light Mode" width="600px" id="preview-img" style="border-radius: 8px; border: 1px solid #ddd; max-width: 100%;" />
-  </p>
-  <div style="margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 8px;">
-    <span style="font-weight: bold;">Light</span>
-    <a href="#lightmode" onclick="document.getElementById('preview-img').src='/public/images/light-mode.png'">🌞</a>
-    |
-    <a href="#darkmode" onclick="document.getElementById('preview-img').src='/public/images/dark-mode.png'">🌙</a>
-    <span style="font-weight: bold;">Dark</span>
-  </div>
-  <p><em>Click the icons to toggle between Light and Dark mode previews</em></p>
+  <!-- Default view: Light Mode -->
+  <img src="/public/images/qr-code-generator-light.png" alt="QR Code Generator Light Mode" width="700px" id="mode-preview" />
+  
+  <!-- Toggle options -->
+  <h3>View Mode:</h3>
+  <details>
+    <summary>🌞 Light Mode</summary>
+    <img src="/public/images/qr-code-generator-light.png" alt="QR Code Generator Light Mode" width="700px" />
+  </details>
+  
+  <details>
+    <summary>🌙 Dark Mode</summary>
+    <img src="/public/images/qr-code-generator-dark.png" alt="QR Code Generator Dark Mode" width="700px" />
+  </details>
 </div>
 </div>
 
