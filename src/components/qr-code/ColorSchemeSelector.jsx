@@ -4,7 +4,6 @@ import { useTheme } from '@/context/ThemeContext';
 
 /**
  * Komponente zur Auswahl von Farbschemata für QR-Codes
- * Mit Unterstützung für Dark Mode
  */
 const ColorSchemeSelector = ({ onSelectScheme }) => {
   const { theme } = useTheme();
@@ -59,7 +58,6 @@ const ColorSchemeSelector = ({ onSelectScheme }) => {
       bg: '#E0E7FF',
       description: 'Verstärkter Kontrast für bessere Lesbarkeit bei unterschiedlichen Lichtverhältnissen'
     },
-    // New color scheme optimized for dark mode
     { 
       name: 'Nachtmodus', 
       fg: '#FFFFFF', 
