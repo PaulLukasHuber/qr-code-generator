@@ -3,7 +3,7 @@ import QRCodeGenerator from './components/qr-code/QRCodeGenerator';
 import ThemeToggle from './components/ui/theme-toggle';
 import { ThemeProvider } from './context/ThemeContext';
 
-const APP_VERSION = '1.3.0';
+const APP_VERSION = '1.4.0';
 
 function App() {
   return (
