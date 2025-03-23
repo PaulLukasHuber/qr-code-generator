@@ -59,6 +59,24 @@ const ColorSchemeSelector = ({ onSelectScheme }) => {
       description: 'Enhanced contrast for better readability in various lighting conditions'
     },
     { 
+      name: 'Purple Accent', 
+      fg: '#4C1D95', 
+      bg: '#F5F3FF',
+      description: 'Elegant purple tones for a sophisticated appearance'
+    },
+    { 
+      name: 'Earth Tones', 
+      fg: '#7C2D12', 
+      bg: '#FEF3C7',
+      description: 'Natural, warm colors for eco-friendly or organic contexts'
+    },
+    { 
+      name: 'Neon Teal', 
+      fg: '#0D9488', 
+      bg: '#ECFDF5',
+      description: 'Vibrant modern look for high visibility and engagement'
+    },
+    { 
       name: 'Night Mode', 
       fg: '#FFFFFF', 
       bg: '#2E3440',

@@ -5,9 +5,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { CustomDateTimePicker } from '../ui/custom-date-time-picker';
 
 /**
+ * Simple component to display validation error messages
+ */
+const ValidationError = ({ message }) => {
+  if (!message) return null;
+  
+  return (
+    <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+      {message}
+    </p>
+  );
+};
+
+/**
  * Component for dynamic form fields based on QR code templates.
  * Displays different input fields depending on the selected template.
- * With support for dark mode.
+ * With support for dark mode and input validation.
  * 
  * @param {Object} props - Component props
  * @param {string} props.templateId - ID of the selected template
@@ -19,6 +32,8 @@ const TemplateFormFields = ({ templateId, initialContent, onContentChange }) => 
   const [formFields, setFormFields] = useState({});
   // Flag to track if initialization is complete
   const [isInitialized, setIsInitialized] = useState(false);
+  // State for validation errors
+  const [validationErrors, setValidationErrors] = useState({});
   
   // Parse template fields - only once during initialization or when the template changes
   useEffect(() => {
@@ -26,22 +41,139 @@ const TemplateFormFields = ({ templateId, initialContent, onContentChange }) => 
       const parsedFields = parseTemplateContent(templateId, initialContent);
       setFormFields(parsedFields);
       setIsInitialized(true);
+      
+      // Reset validation errors when template changes
+      setValidationErrors({});
     }
   }, [templateId]); // Dependency only on templateId, not on initialContent
   
-  // Update QR code on changes, but only if initialization is complete
+  // Update QR code on changes, but only if initialization is complete and data is valid
   useEffect(() => {
     if (isInitialized && Object.keys(formFields).length > 0) {
-      const formattedContent = formatTemplateContent(templateId, formFields);
-      onContentChange(formattedContent);
+      // Check if there are any validation errors
+      const hasErrors = Object.values(validationErrors).some(error => error !== '');
+      
+      if (!hasErrors) {
+        const formattedContent = formatTemplateContent(templateId, formFields);
+        onContentChange(formattedContent);
+      }
     }
-  }, [formFields, templateId, isInitialized, onContentChange]);
+  }, [formFields, templateId, isInitialized, onContentChange, validationErrors]);
+
+  // Validation helper functions
+  const validateURL = (url) => {
+    // Basic URL validation - matches common URL patterns
+    const urlPattern = /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
+    return urlPattern.test(url) || url === '';
+  };
+
+  const validateEmail = (email) => {
+    // Email validation
+    const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    return emailPattern.test(email) || email === '';
+  };
+
+  const validatePhone = (phone) => {
+    // Phone validation - matches common international formats with country code
+    // Allows formats like: +491234567890, +1 123 456 7890, +44-123-456-7890
+    const phonePattern = /^\+(?:[0-9] ?){6,14}[0-9]$/;
+    return phonePattern.test(phone) || phone === '';
+  };
+
+  const validateNumber = (num) => {
+    return !isNaN(parseFloat(num)) || num === '';
+  };
+
+  const validateRequired = (value) => {
+    return value && value.trim() !== '';
+  };
   
-  // Update a single field
+  // Update a single field with validation
   const handleFieldChange = (fieldName, value) => {
+    // Update the form field value
     setFormFields(prev => ({
       ...prev,
       [fieldName]: value
+    }));
+    
+    // Validate the field based on its type and template
+    let isValid = true;
+    let errorMessage = '';
+    
+    switch (templateId) {
+      case 'website':
+        if (fieldName === 'url') {
+          isValid = validateURL(value);
+          errorMessage = isValid ? '' : 'Please enter a valid URL';
+        }
+        break;
+        
+      case 'wifi':
+        if (fieldName === 'ssid' && !validateRequired(value)) {
+          isValid = false;
+          errorMessage = 'Network name is required';
+        }
+        break;
+        
+      case 'contact':
+        if (fieldName === 'email') {
+          isValid = validateEmail(value);
+          errorMessage = isValid ? '' : 'Please enter a valid email address';
+        } else if (fieldName === 'phone') {
+          isValid = validatePhone(value);
+          errorMessage = isValid ? '' : 'Please enter a valid phone number with country code (e.g., +1234567890)';
+        }
+        break;
+        
+      case 'email':
+        if (fieldName === 'email') {
+          isValid = validateEmail(value);
+          errorMessage = isValid ? '' : 'Please enter a valid email address';
+        }
+        break;
+        
+      case 'payment':
+        if (fieldName === 'amount') {
+          isValid = validateNumber(value);
+          errorMessage = isValid ? '' : 'Amount must be a number';
+        }
+        break;
+        
+      case 'location':
+        if (fieldName === 'latitude') {
+          isValid = validateNumber(value) && (value === '' || (parseFloat(value) >= -90 && parseFloat(value) <= 90));
+          errorMessage = isValid ? '' : 'Latitude must be between -90 and 90';
+        } else if (fieldName === 'longitude') {
+          isValid = validateNumber(value) && (value === '' || (parseFloat(value) >= -180 && parseFloat(value) <= 180));
+          errorMessage = isValid ? '' : 'Longitude must be between -180 and 180';
+        }
+        break;
+        
+      case 'sms':
+        if (fieldName === 'phone') {
+          isValid = validatePhone(value);
+          errorMessage = isValid ? '' : 'Please enter a valid phone number with country code (e.g., +1234567890)';
+        }
+        break;
+        
+      case 'app':
+        if (fieldName === 'universalLink') {
+          isValid = value === '' || validateURL(value);
+          errorMessage = isValid ? '' : 'Please enter a valid URL';
+        } else if (fieldName === 'androidUrl') {
+          isValid = value === '' || (validateURL(value) && value.includes('play.google.com'));
+          errorMessage = isValid ? '' : 'Please enter a valid Google Play Store URL';
+        } else if (fieldName === 'iosUrl') {
+          isValid = value === '' || (validateURL(value) && value.includes('apps.apple.com'));
+          errorMessage = isValid ? '' : 'Please enter a valid Apple App Store URL';
+        }
+        break;
+    }
+    
+    // Update validation errors
+    setValidationErrors(prev => ({
+      ...prev,
+      [fieldName]: isValid ? '' : errorMessage
     }));
   };
   
@@ -73,6 +205,33 @@ LOCATION:${fields.location || ''}
 DTSTART:${fields.start || ''}
 DTEND:${fields.end || ''}
 END:VEVENT`;
+
+      // New SMS template
+      case 'sms':
+        return `SMSTO:${fields.phone || ''}:${fields.message || ''}`;
+
+      // New App Download template
+      case 'app': {
+        let content = fields.appName || 'Download Our App';
+        
+        if (fields.universalLink) {
+          content += `\n\n${fields.universalLink}`;
+        }
+        
+        if (fields.androidUrl) {
+          content += `\n\nAndroid: ${fields.androidUrl}`;
+        }
+        
+        if (fields.iosUrl) {
+          content += `\n\niOS: ${fields.iosUrl}`;
+        }
+        
+        if (fields.description) {
+          content += `\n\n${fields.description}`;
+        }
+        
+        return content;
+      }
         
       default:
         return '';
@@ -89,7 +248,10 @@ END:VEVENT`;
       email: { email: '', subject: '' },
       payment: { address: '', amount: '' },
       location: { latitude: '0', longitude: '0' },
-      event: { title: '', location: '', start: '', end: '' }
+      event: { title: '', location: '', start: '', end: '' },
+      // New template defaults
+      sms: { phone: '', message: '' },
+      app: { appName: 'Download Our App', universalLink: '', androidUrl: '', iosUrl: '', description: '' }
     };
     
     try {
@@ -185,6 +347,36 @@ END:VEVENT`;
             end: endMatch ? endMatch[1] : defaultValues.event.end
           };
         }
+
+        // New SMS template parser
+        case 'sms': {
+          // Parse SMS format: SMSTO:+491234567890:Your message text here
+          const phoneMatch = content.match(/SMSTO:([^:]*)/);
+          const messageMatch = content.match(/SMSTO:[^:]*:(.*)/);
+          
+          return {
+            phone: phoneMatch ? phoneMatch[1] : defaultValues.sms.phone,
+            message: messageMatch ? messageMatch[1] : defaultValues.sms.message
+          };
+        }
+        
+        // New App Download template parser
+        case 'app': {
+          // Parse multiline content with app links
+          const appNameMatch = content.match(/^(.*?)(?:\n|$)/);
+          const universalMatch = content.match(/https?:\/\/(?!play\.google\.com|apps\.apple\.com)[^\n]*/);
+          const androidMatch = content.match(/Android: (https?:\/\/play\.google\.com[^\n]*)/);
+          const iosMatch = content.match(/iOS: (https?:\/\/apps\.apple\.com[^\n]*)/);
+          const descMatch = content.match(/\n\n([^]*)$/);
+          
+          return {
+            appName: appNameMatch ? appNameMatch[1] : defaultValues.app.appName,
+            universalLink: universalMatch ? universalMatch[0] : defaultValues.app.universalLink,
+            androidUrl: androidMatch ? androidMatch[1] : defaultValues.app.androidUrl,
+            iosUrl: iosMatch ? iosMatch[1] : defaultValues.app.iosUrl,
+            description: descMatch ? descMatch[1] : defaultValues.app.description
+          };
+        }
           
         default:
           return {};
@@ -209,8 +401,11 @@ END:VEVENT`;
                 value={formFields.url || ''}
                 onChange={(e) => handleFieldChange('url', e.target.value)}
                 placeholder="https://example.com"
-                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 ${
+                  validationErrors.url ? 'border-red-500 focus-visible:ring-red-500' : ''
+                }`}
               />
+              <ValidationError message={validationErrors.url} />
             </div>
           </div>
         );
@@ -225,8 +420,11 @@ END:VEVENT`;
                 value={formFields.ssid || ''}
                 onChange={(e) => handleFieldChange('ssid', e.target.value)}
                 placeholder="Wi-Fi network name"
-                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 ${
+                  validationErrors.ssid ? 'border-red-500 focus-visible:ring-red-500' : ''
+                }`}
               />
+              <ValidationError message={validationErrors.ssid} />
             </div>
             
             <div className="space-y-2">
@@ -281,8 +479,11 @@ END:VEVENT`;
                 value={formFields.phone || ''}
                 onChange={(e) => handleFieldChange('phone', e.target.value)}
                 placeholder="+49 123 4567890"
-                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 ${
+                  validationErrors.phone ? 'border-red-500 focus-visible:ring-red-500' : ''
+                }`}
               />
+              <ValidationError message={validationErrors.phone} />
             </div>
             
             <div className="space-y-2">
@@ -292,8 +493,11 @@ END:VEVENT`;
                 value={formFields.email || ''}
                 onChange={(e) => handleFieldChange('email', e.target.value)}
                 placeholder="example@email.com"
-                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 ${
+                  validationErrors.email ? 'border-red-500 focus-visible:ring-red-500' : ''
+                }`}
               />
+              <ValidationError message={validationErrors.email} />
             </div>
             
             <div className="space-y-2">
@@ -319,8 +523,11 @@ END:VEVENT`;
                 value={formFields.email || ''}
                 onChange={(e) => handleFieldChange('email', e.target.value)}
                 placeholder="example@email.com"
-                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 ${
+                  validationErrors.email ? 'border-red-500 focus-visible:ring-red-500' : ''
+                }`}
               />
+              <ValidationError message={validationErrors.email} />
             </div>
             
             <div className="space-y-2">
@@ -359,8 +566,11 @@ END:VEVENT`;
                 value={formFields.amount || ''}
                 onChange={(e) => handleFieldChange('amount', e.target.value)}
                 placeholder="0.0001"
-                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 ${
+                  validationErrors.amount ? 'border-red-500 focus-visible:ring-red-500' : ''
+                }`}
               />
+              <ValidationError message={validationErrors.amount} />
             </div>
           </div>
         );
@@ -375,8 +585,11 @@ END:VEVENT`;
                 value={formFields.latitude || ''}
                 onChange={(e) => handleFieldChange('latitude', e.target.value)}
                 placeholder="52.520008"
-                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 ${
+                  validationErrors.latitude ? 'border-red-500 focus-visible:ring-red-500' : ''
+                }`}
               />
+              <ValidationError message={validationErrors.latitude} />
             </div>
             
             <div className="space-y-2">
@@ -386,8 +599,11 @@ END:VEVENT`;
                 value={formFields.longitude || ''}
                 onChange={(e) => handleFieldChange('longitude', e.target.value)}
                 placeholder="13.404954"
-                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 ${
+                  validationErrors.longitude ? 'border-red-500 focus-visible:ring-red-500' : ''
+                }`}
               />
+              <ValidationError message={validationErrors.longitude} />
             </div>
           </div>
         );
@@ -438,6 +654,118 @@ END:VEVENT`;
                 onChange={(value) => handleFieldChange('end', value)}
                 helperText="End date and time"
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+              />
+            </div>
+          </div>
+        );
+
+      // New SMS Message template form with validation
+      case 'sms':
+        return (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="sms-phone" className="dark:text-gray-200">Phone Number</Label>
+              <Input 
+                id="sms-phone"
+                value={formFields.phone || ''}
+                onChange={(e) => handleFieldChange('phone', e.target.value)}
+                placeholder="+491234567890"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 ${
+                  validationErrors.phone ? 'border-red-500 focus-visible:ring-red-500' : ''
+                }`}
+              />
+              <ValidationError message={validationErrors.phone} />
+              <p className="text-xs text-muted-foreground dark:text-gray-400">
+                Include country code (e.g., +49 for Germany)
+              </p>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="sms-message" className="dark:text-gray-200">Message Text</Label>
+              <textarea 
+                id="sms-message"
+                value={formFields.message || ''}
+                onChange={(e) => handleFieldChange('message', e.target.value)}
+                placeholder="Your message text here"
+                rows={4}
+                className="w-full rounded-md border border-input px-3 py-2 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+              />
+              <p className="text-xs text-muted-foreground dark:text-gray-400">
+                Message the recipient will see when they scan the code
+              </p>
+            </div>
+          </div>
+        );
+      
+      // New App Download template form with validation
+      case 'app':
+        return (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="app-name" className="dark:text-gray-200">App Name</Label>
+              <Input 
+                id="app-name"
+                value={formFields.appName || ''}
+                onChange={(e) => handleFieldChange('appName', e.target.value)}
+                placeholder="My Amazing App"
+                className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="app-universal" className="dark:text-gray-200">Universal Link (optional)</Label>
+              <Input 
+                id="app-universal"
+                value={formFields.universalLink || ''}
+                onChange={(e) => handleFieldChange('universalLink', e.target.value)}
+                placeholder="https://example.com/app"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 ${
+                  validationErrors.universalLink ? 'border-red-500 focus-visible:ring-red-500' : ''
+                }`}
+              />
+              <ValidationError message={validationErrors.universalLink} />
+              <p className="text-xs text-muted-foreground dark:text-gray-400">
+                Fallback URL if app store links don't work
+              </p>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="app-android" className="dark:text-gray-200">Google Play Store URL</Label>
+              <Input 
+                id="app-android"
+                value={formFields.androidUrl || ''}
+                onChange={(e) => handleFieldChange('androidUrl', e.target.value)}
+                placeholder="https://play.google.com/store/apps/details?id=com.example.app"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 ${
+                  validationErrors.androidUrl ? 'border-red-500 focus-visible:ring-red-500' : ''
+                }`}
+              />
+              <ValidationError message={validationErrors.androidUrl} />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="app-ios" className="dark:text-gray-200">Apple App Store URL</Label>
+              <Input 
+                id="app-ios"
+                value={formFields.iosUrl || ''}
+                onChange={(e) => handleFieldChange('iosUrl', e.target.value)}
+                placeholder="https://apps.apple.com/app/id1234567890"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400 ${
+                  validationErrors.iosUrl ? 'border-red-500 focus-visible:ring-red-500' : ''
+                }`}
+              />
+              <ValidationError message={validationErrors.iosUrl} />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="app-description" className="dark:text-gray-200">Short Description (optional)</Label>
+              <textarea 
+                id="app-description"
+                value={formFields.description || ''}
+                onChange={(e) => handleFieldChange('description', e.target.value)}
+                placeholder="Download our app to access exclusive features!"
+                rows={2}
+                className="w-full rounded-md border border-input px-3 py-2 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:placeholder-gray-400"
               />
             </div>
           </div>

@@ -13,6 +13,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multiple language support
 - Direct sharing options
 
+## [1.6.0] - 2025-03-24
+
+### Added
+- Two new specialized QR code templates:
+  - SMS Message template for creating pre-composed text messages
+  - App Download template for directing users to mobile applications with platform detection
+- Three new color schemes:
+  - Purple Accent: Deep purple on light purple for sophisticated appearance
+  - Earth Tones: Brown on beige for eco-friendly or organic contexts
+  - Neon Teal: Vibrant teal on mint for high visibility
+- Comprehensive input validation system:
+  - Real-time validation feedback for all form fields
+  - Visual indicators for invalid inputs
+  - Context-specific error messages
+  - Type-specific validation (URLs, email addresses, phone numbers)
+  - Range validation for coordinates and numeric values
+  - Specialized validation for app store links
+
+### Changed
+- Improved user experience with validation feedback while typing
+- Enhanced template form parsing and formatting logic
+- Updated version number to reflect new features
+
 ## [1.5.1] - 2025-03-23
 
 ### Fixed
