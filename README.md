@@ -20,16 +20,17 @@
   <a href="#-deutsch">Deutsch 🇩🇪</a>
 </div>
 <div align="center">
-  <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-    <div>
-      <p><strong>Light Mode</strong></p>
-      <img src="/public/images/light-mode.png" alt="QR Code Generator Light Mode" width="350px" style="border-radius: 8px; border: 1px solid #ddd;" />
-    </div>
-    <div>
-      <p><strong>Dark Mode</strong></p>
-      <img src="/public/images/dark-mode.png" alt="QR Code Generator Dark Mode" width="350px" style="border-radius: 8px; border: 1px solid #333;" />
-    </div>
+  <p>
+    <img src="/public/images/light-mode.png" alt="QR Code Generator Light Mode" width="600px" id="preview-img" style="border-radius: 8px; border: 1px solid #ddd; max-width: 100%;" />
+  </p>
+  <div style="margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 8px;">
+    <span style="font-weight: bold;">Light</span>
+    <a href="#lightmode" onclick="document.getElementById('preview-img').src='/public/images/light-mode.png'">🌞</a>
+    |
+    <a href="#darkmode" onclick="document.getElementById('preview-img').src='/public/images/dark-mode.png'">🌙</a>
+    <span style="font-weight: bold;">Dark</span>
   </div>
+  <p><em>Click the icons to toggle between Light and Dark mode previews</em></p>
 </div>
 </div>
 
