@@ -644,7 +644,7 @@ const QRCodeGenerator = () => {
               <Button 
                 onClick={downloadSVG} 
                 className="w-full" 
-                disabled={loading || !qrInitialized || (showLogo && logo)}
+                disabled={loading || !qrInitialized}
               >
                 <Download className="w-4 h-4 mr-2" />
                 SVG
@@ -658,12 +658,6 @@ const QRCodeGenerator = () => {
                 PNG
               </Button>
             </div>
-            
-            {showLogo && logo && (
-              <div className="mt-2 p-2 text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded">
-                <p>SVG export with logos is not supported. Please use PNG format when using logos. We are working on a solution.</p>
-              </div>
-            )}
           </div>
           
           {/* Error and success messages */}
