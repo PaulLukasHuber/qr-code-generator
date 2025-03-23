@@ -38,26 +38,26 @@ const LogoConfigSection = ({
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
+  
     // Only accept image files
     if (!file.type.startsWith('image/')) {
       alert('Please select an image file.');
       return;
     }
-
+  
     // Check if it's an SVG file
     const isSvg = file.type === 'image/svg+xml';
     
     const reader = new FileReader();
     
     if (isSvg) {
-      // For SVG files, we read the text content
+      // For SVG files, read the text content
       reader.onload = (event) => {
         const svgContent = event.target.result;
         setLogoType('svg');
         setLogoSvgContent(svgContent);
         
-        // Still use as DataURL for the canvas preview
+        // Also create a data URL for the preview
         const dataUrl = URL.createObjectURL(file);
         setLogo(dataUrl);
         
@@ -66,6 +66,9 @@ const LogoConfigSection = ({
         if (errorCorrectionLevel !== 'H') {
           setErrorCorrectionLevel('H');
         }
+        
+        // Display success message
+        console.log('SVG logo loaded successfully');
       };
       reader.readAsText(file);
     } else {
@@ -271,7 +274,8 @@ const LogoConfigSection = ({
               </p>
               {logoType === 'svg' && (
                 <p className="text-blue-600 dark:text-blue-400 mt-1">
-                  SVG logos maintain their vector quality during SVG export.
+                  Your SVG logo will be properly embedded as vector graphics in SVG exports,
+                  ensuring perfect quality at any scale.
                 </p>
               )}
             </div>

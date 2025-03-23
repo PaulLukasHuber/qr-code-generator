@@ -13,6 +13,8 @@ import QRCodeTemplates from './QRCodeTemplates';
 import TemplateFormFields from './TemplateFormFields';
 import LogoConfigSection from './LogoConfigSection';
 import { useTheme } from '@/context/ThemeContext';
+import { downloadQRCodeAsSVG } from '@/lib/qrSvgUtils';
+import { Bug } from 'lucide-react';
 
 // Import QRCode library in advance to avoid loading issues
 import QRCode from 'qrcode';
@@ -352,53 +354,59 @@ const QRCodeGenerator = () => {
     setText(newContent);
   };
   
-  // Download as SVG - robust version
+  // Download as SVG
   const downloadSVG = () => {
-    if (!qrDataRef.current || !qrDataRef.current.dataUrl) {
-      setError("No QR code available for download.");
+    if (!qrInitialized) {
+      setError("QR code is not fully initialized.");
       return;
     }
     
+    setLoading(true);
+    
     try {
-      // Use standard method that works in all browsers
-      const svgNS = "http://www.w3.org/2000/svg";
-      const svg = document.createElementNS(svgNS, "svg");
-      svg.setAttribute("width", size);
-      svg.setAttribute("height", size);
-      svg.setAttribute("xmlns", svgNS);
+      // Get effective error correction level
+      const effectiveErrorLevel = showLogo && logo ? 'H' : errorCorrectionLevel;
       
-      const rect = document.createElementNS(svgNS, "rect");
-      rect.setAttribute("width", "100%");
-      rect.setAttribute("height", "100%");
-      rect.setAttribute("fill", bgColor);
-      svg.appendChild(rect);
+      // Get effective colors
+      let effectiveBgColor = bgColor;
+      let effectiveFgColor = fgColor;
       
-      const image = document.createElementNS(svgNS, "image");
-      image.setAttribute("href", qrDataRef.current.dataUrl);
-      image.setAttribute("width", "100%");
-      image.setAttribute("height", "100%");
-      svg.appendChild(image);
+      // Adjust for dark mode if using default colors
+      if (theme === 'dark' && bgColor === '#ffffff' && fgColor === '#000000') {
+        effectiveBgColor = '#2e2e2e';
+        effectiveFgColor = '#ffffff';
+      }
       
-      // Convert SVG to string
-      const svgData = new XMLSerializer().serializeToString(svg);
-      
-      // Download
-      const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
-      const svgUrl = URL.createObjectURL(svgBlob);
-      
-      const downloadLink = document.createElement('a');
-      downloadLink.href = svgUrl;
-      downloadLink.download = 'qrcode.svg';
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-      URL.revokeObjectURL(svgUrl);
-      
-      setSuccessMessage('SVG successfully downloaded!');
-      setTimeout(() => setSuccessMessage(''), 2000);
+      // Call SVG generator
+      downloadQRCodeAsSVG({
+        text: text || 'https://example.com',
+        size: size,
+        fgColor: effectiveFgColor,
+        bgColor: effectiveBgColor,
+        errorCorrectionLevel: effectiveErrorLevel,
+        showLogo: showLogo,
+        logo: logo,
+        logoSize: logoSize,
+        logoShape: logoShape,
+        logoBackground: logoBackground,
+        useCustomBackground: useCustomBackground,
+        logoType: logoType,
+        logoSvgContent: logoSvgContent
+      })
+        .then(() => {
+          setSuccessMessage('SVG successfully downloaded!');
+          setTimeout(() => setSuccessMessage(''), 2000);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error("Error during SVG download:", err);
+          setError("SVG could not be downloaded: " + (err.message || 'Unknown error'));
+          setLoading(false);
+        });
     } catch (err) {
-      console.error("Error during SVG download:", err);
-      setError("SVG could not be downloaded: " + err.message);
+      console.error("Error preparing SVG download:", err);
+      setError("SVG download failed: " + (err.message || 'Unknown error'));
+      setLoading(false);
     }
   };
   
@@ -633,21 +641,23 @@ const QRCodeGenerator = () => {
           {/* Download options - always visible */}
           <div className="pt-4 border-t mt-4 dark:border-gray-700">
             <div className="grid grid-cols-2 gap-2">
-              <Button onClick={downloadSVG} className="w-full" disabled={loading || !qrInitialized}>
+              <Button 
+                onClick={downloadSVG} 
+                className="w-full" 
+                disabled={loading || !qrInitialized}
+              >
                 <Download className="w-4 h-4 mr-2" />
                 SVG
               </Button>
-              <Button onClick={downloadPNG} className="w-full" disabled={loading || !qrInitialized}>
+              <Button 
+                onClick={downloadPNG} 
+                className="w-full" 
+                disabled={loading || !qrInitialized}
+              >
                 <Download className="w-4 h-4 mr-2" />
                 PNG
               </Button>
             </div>
-            
-            {logoType === 'svg' && showLogo && logo && (
-              <div className="mt-2 p-2 text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded">
-                <p>Note: SVG logos currently lose their vector properties in exports due to technical limitations with SVG-in-SVG embedding.</p>
-              </div>
-            )}
           </div>
           
           {/* Error and success messages */}

@@ -13,6 +13,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multiple language support
 - Direct sharing options
 
+## [1.5.1] - 2025-03-23
+
+### Fixed
+- SVG export now fully supports logo integration, allowing vector-quality exports with embedded logos
+- Proper logo positioning and sizing in SVG exports
+- Corrected coordinate system handling to ensure QR codes maintain proper dimensions
+- All logo shape options (square, rounded square, circle) now work correctly in SVG exports
+- SVG logo embedding for higher quality when using SVG source files
+
+## [1.5.0] - 2025-03-23
+
+### Added
+- SVG export functionality for QR codes without logos
+- Visual indicator informing users that logos are not supported in SVG exports
+- Button state management that automatically disables SVG download when a logo is present
+
+### Changed
+- Updated download section UI to clearly guide users toward PNG format for QR codes with logos
+- Enhanced user experience by preventing generation of broken SVG files
+
+### Technical
+- Implemented vector-based SVG export that maintains quality at any scale
+- Added proper handling of QR code paths to ensure correct rendering across different viewers
+
 ## [1.4.0] - 2025-03-23
 
 ### Added
