@@ -8,11 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- Add ability to insert custom logos in QR code center
 - Implement additional QR code styles (dots, patterns)
 - QR code generation history
 - Multiple language support
 - Direct sharing options
+
+## [1.4.0] - 2025-03-23
+
+### Added
+- Custom logo integration feature for embedding brand logos in QR codes
+- Logo upload support for PNG, JPEG, SVG, and other image formats
+- Logo size adjustment slider (10-40% of QR code size)
+- Logo shape options (square, rounded square, circle)
+- Custom background color options with transparency support
+- Automatic error correction level adjustment to maintain scanability
+- Visual feedback for optimal logo size settings
+- Responsive design for logo customization interface on all devices
+
+### Changed
+- Enhanced error correction level indicator with clearer visual feedback
+- Improved download functions for better browser compatibility
+- Updated design tab with more intuitive layout for logo settings
 
 ## [1.3.0] - 2025-03-22
 
