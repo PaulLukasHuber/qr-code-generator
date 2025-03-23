@@ -19,9 +19,18 @@
   <a href="#-english">English 🇬🇧</a> | 
   <a href="#-deutsch">Deutsch 🇩🇪</a>
 </div>
-
-<img src="/public/images/qr-code-generator.png" alt="QR Code Generator Screenshot" width="700px" />
-
+<div align="center">
+  <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+    <div>
+      <p><strong>Light Mode</strong></p>
+      <img src="/public/images/light-mode.png" alt="QR Code Generator Light Mode" width="350px" style="border-radius: 8px; border: 1px solid #ddd;" />
+    </div>
+    <div>
+      <p><strong>Dark Mode</strong></p>
+      <img src="/public/images/dark-mode.png" alt="QR Code Generator Dark Mode" width="350px" style="border-radius: 8px; border: 1px solid #333;" />
+    </div>
+  </div>
+</div>
 </div>
 
 ---
