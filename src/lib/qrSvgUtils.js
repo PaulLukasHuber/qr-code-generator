@@ -1,4 +1,3 @@
-// Import QRCode library
 import QRCode from 'qrcode';
 
 /**

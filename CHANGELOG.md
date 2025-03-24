@@ -7,11 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned
+### Planned Features
+- Context-aware export options that display format choices based on QR code content type
+- Additional advanced export formats:
+  - Print Directly - Send QR codes directly to printer without creating files
+  - ZIP Package - Bundle multiple formats (PNG, SVG, HTML) in a single download
+  - Social Media Format - Optimized dimensions and styling for sharing on social platforms
+  - vCard Format - Direct contact file export for contact information QR codes
+  - High-Resolution PNG - Extra large image files for large-format printing
 - Implement additional QR code styles (dots, patterns)
 - QR code generation history
 - Multiple language support
-- Direct sharing options
+
+## [1.7.0] - 2025-03-24
+
+### Added
+- Redesigned export interface with tabbed organization:
+  - Raster formats tab (PNG, JPEG, WebP)
+  - Vector formats tab (SVG, PDF)
+  - Web formats tab (HTML, Data URL, Copy to Clipboard)
+- Enhanced UI design with consistent button styling
+- Improved dark mode compatibility throughout export interface
+- Clear visual indicators for beta features
+- Contextual descriptions for each export format category
+
+### Changed
+- Replaced Download Buttons with space-efficient tabbed interface
+- Enhanced button design for better visibility in both light and dark modes
+- Improved export organization with logical format grouping
+- Better visual hierarchy and user flow for export options
+
+### Technical
+- Created comprehensive utility functions for each export format
+- Added browser compatibility checks for advanced formats like WebP
+- Implemented a modular export architecture for future expansion
 
 ## [1.6.0] - 2025-03-24
 

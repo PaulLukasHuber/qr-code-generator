@@ -75,20 +75,20 @@ const QRCodeTemplates = ({ onSelectTemplate }) => {
     {
       id: 'sms',
       name: 'SMS Message',
-      icon: <MessageSquare />, // Using the MessageSquare icon from Lucide
+      icon: <MessageSquare />,
       content: 'SMSTO:+491234567890:Your message text here',
       description: 'Send a pre-composed text message',
-      fgColor: '#6D28D9', // Purple shade
-      bgColor: '#F5F3FF'  // Light purple background
+      fgColor: '#6D28D9',
+      bgColor: '#F5F3FF'
     },
     {
       id: 'app',
       name: 'App Download',
-      icon: <Download />, // Using the Download icon from Lucide
+      icon: <Download />,
       content: 'https://example.com/app\n\nAndroid: https://play.google.com/store/apps/details?id=com.example.app\n\niOS: https://apps.apple.com/app/id1234567890',
       description: 'Direct users to download your app',
-      fgColor: '#059669', // Green shade
-      bgColor: '#ECFDF5'  // Light mint background
+      fgColor: '#059669',
+      bgColor: '#ECFDF5'
     }
   ];
 

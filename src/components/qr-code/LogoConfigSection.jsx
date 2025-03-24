@@ -26,10 +26,8 @@ const LogoConfigSection = ({
   setUseCustomBackground,
   errorCorrectionLevel,
   setErrorCorrectionLevel,
-  // New props for SVG support
   logoType,
   setLogoType,
-  logoSvgContent,
   setLogoSvgContent
 }) => {
   const fileInputRef = useRef(null);

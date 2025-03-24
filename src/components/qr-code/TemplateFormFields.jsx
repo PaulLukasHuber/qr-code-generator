@@ -20,7 +20,6 @@ const ValidationError = ({ message }) => {
 /**
  * Component for dynamic form fields based on QR code templates.
  * Displays different input fields depending on the selected template.
- * With support for dark mode and input validation.
  * 
  * @param {Object} props - Component props
  * @param {string} props.templateId - ID of the selected template
@@ -200,17 +199,15 @@ const TemplateFormFields = ({ templateId, initialContent, onContentChange }) => 
         
       case 'event':
         return `BEGIN:VEVENT
-SUMMARY:${fields.title || ''}
-LOCATION:${fields.location || ''}
-DTSTART:${fields.start || ''}
-DTEND:${fields.end || ''}
-END:VEVENT`;
+                SUMMARY:${fields.title || ''}
+                LOCATION:${fields.location || ''}
+                DTSTART:${fields.start || ''}
+                DTEND:${fields.end || ''}
+                END:VEVENT`;
 
-      // New SMS template
       case 'sms':
         return `SMSTO:${fields.phone || ''}:${fields.message || ''}`;
 
-      // New App Download template
       case 'app': {
         let content = fields.appName || 'Download Our App';
         
@@ -249,7 +246,6 @@ END:VEVENT`;
       payment: { address: '', amount: '' },
       location: { latitude: '0', longitude: '0' },
       event: { title: '', location: '', start: '', end: '' },
-      // New template defaults
       sms: { phone: '', message: '' },
       app: { appName: 'Download Our App', universalLink: '', androidUrl: '', iosUrl: '', description: '' }
     };
@@ -348,9 +344,7 @@ END:VEVENT`;
           };
         }
 
-        // New SMS template parser
         case 'sms': {
-          // Parse SMS format: SMSTO:+491234567890:Your message text here
           const phoneMatch = content.match(/SMSTO:([^:]*)/);
           const messageMatch = content.match(/SMSTO:[^:]*:(.*)/);
           
@@ -360,9 +354,7 @@ END:VEVENT`;
           };
         }
         
-        // New App Download template parser
         case 'app': {
-          // Parse multiline content with app links
           const appNameMatch = content.match(/^(.*?)(?:\n|$)/);
           const universalMatch = content.match(/https?:\/\/(?!play\.google\.com|apps\.apple\.com)[^\n]*/);
           const androidMatch = content.match(/Android: (https?:\/\/play\.google\.com[^\n]*)/);
@@ -659,7 +651,6 @@ END:VEVENT`;
           </div>
         );
 
-      // New SMS Message template form with validation
       case 'sms':
         return (
           <div className="space-y-4">
@@ -697,7 +688,6 @@ END:VEVENT`;
           </div>
         );
       
-      // New App Download template form with validation
       case 'app':
         return (
           <div className="space-y-4">
