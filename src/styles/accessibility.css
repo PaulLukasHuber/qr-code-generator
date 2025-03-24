@@ -1,0 +1,198 @@
+/* Accessibility Styles
+   This file contains styles for various accessibility features 
+   including high contrast mode, font sizing, and reduced motion. */
+
+/* Base font size adjustments */
+.text-size-small {
+    --font-size-base: 0.875rem;
+    --font-size-sm: 0.75rem; 
+    --font-size-lg: 1rem;
+    --font-size-xl: 1.125rem;
+    --font-size-2xl: 1.25rem;
+    --font-size-3xl: 1.5rem;
+  }
+  
+  .text-size-medium {
+    --font-size-base: 1rem;
+    --font-size-sm: 0.875rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+  }
+  
+  .text-size-large {
+    --font-size-base: 1.125rem;
+    --font-size-sm: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-xl: 1.5rem;
+    --font-size-2xl: 1.875rem;
+    --font-size-3xl: 2.25rem;
+  }
+  
+  .text-size-x-large {
+    --font-size-base: 1.25rem;
+    --font-size-sm: 1.125rem;
+    --font-size-lg: 1.5rem;
+    --font-size-xl: 1.875rem;
+    --font-size-2xl: 2.25rem;
+    --font-size-3xl: 2.5rem;
+  }
+  
+  /* Apply font size variables */
+  html {
+    font-size: var(--font-size-base, 1rem);
+  }
+  
+  .text-sm {
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+  
+  .text-base {
+    font-size: var(--font-size-base, 1rem);
+  }
+  
+  .text-lg {
+    font-size: var(--font-size-lg, 1.125rem);
+  }
+  
+  .text-xl {
+    font-size: var(--font-size-xl, 1.25rem);
+  }
+  
+  .text-2xl {
+    font-size: var(--font-size-2xl, 1.5rem);
+  }
+  
+  .text-3xl {
+    font-size: var(--font-size-3xl, 1.875rem);
+  }
+  
+  /* High contrast mode */
+  .high-contrast {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    
+    --primary: 230 100% 45%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 0 0% 90%;
+    --secondary-foreground: 0 0% 0%;
+    
+    --muted: 0 0% 90%;
+    --muted-foreground: 0 0% 0%;
+    
+    --accent: 230 100% 45%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 100% 45%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 0 0% 0%;
+    --input: 0 0% 0%;
+    --ring: 230 100% 45%;
+  }
+  
+  .high-contrast.dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+    
+    --primary: 230 100% 60%;
+    --primary-foreground: 0 0% 0%;
+    
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 100%;
+    
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 100%;
+    
+    --accent: 230 100% 60%;
+    --accent-foreground: 0 0% 0%;
+    
+    --destructive: 0 100% 60%;
+    --destructive-foreground: 0 0% 0%;
+    
+    --border: 0 0% 100%;
+    --input: 0 0% 100%;
+    --ring: 230 100% 60%;
+  }
+  
+  /* High contrast focus styles */
+  .high-contrast :focus-visible {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+  
+  .high-contrast a:focus,
+  .high-contrast button:focus,
+  .high-contrast input:focus,
+  .high-contrast select:focus,
+  .high-contrast textarea:focus {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+  
+  /* Reduced motion */
+  .reduced-motion * {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Focus visibility */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+  
+  /* Utility classes for screen readers */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  .not-sr-only {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+  
+  /* Skip link for keyboard navigation */
+  .skip-link {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    left: 50%;
+    padding: 8px;
+    position: absolute;
+    transform: translateY(-100%);
+    transition: transform 0.3s;
+    z-index: 100;
+  }
+  
+  .skip-link:focus {
+    transform: translateY(0%);
+  }
