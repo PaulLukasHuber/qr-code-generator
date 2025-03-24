@@ -6,7 +6,7 @@ import { Input } from './input';
 import { Calendar, Clock, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 /**
- * Enhanced CustomDateTimePicker
+ *  CustomDateTimePicker
  * 
  * A customized date and time picker with:
  * - Hierarchical month/year navigation

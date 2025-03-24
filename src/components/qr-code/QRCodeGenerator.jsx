@@ -4,17 +4,25 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
 import { Slider } from '../ui/slider';
-import { Download, RefreshCw, Settings, Palette, Move, FileCode, Shield, Upload, Trash2, ImagePlus } from 'lucide-react';
-import { ImageIcon } from 'lucide-react'; // Renamed to avoid conflicts
+import { RefreshCw, Settings, Palette, FileCode, Shield } from 'lucide-react';
+import { ImageIcon } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import ColorSchemeSelector from './ColorSchemeSelector';
 import QRCodeTemplates from './QRCodeTemplates';
 import TemplateFormFields from './TemplateFormFields';
 import LogoConfigSection from './LogoConfigSection';
 import { useTheme } from '@/context/ThemeContext';
-import { downloadQRCodeAsSVG } from '@/lib/qrSvgUtils';
-import { Bug } from 'lucide-react';
+import { 
+  exportAsPNG, 
+  exportAsJPEG, 
+  exportAsSVG, 
+  exportAsWebP, 
+  exportAsPDF, 
+  exportAsHTMLSnippet, 
+  exportAsDataURL,
+  copyDataURLToClipboard
+} from '@/lib/qrExportUtils';
+import TabbedExportPanel from './TabbedExportPanel';
 
 // Import QRCode library in advance to avoid loading issues
 import QRCode from 'qrcode';
@@ -25,6 +33,7 @@ import QRCode from 'qrcode';
  * Allows users to create QR codes with various templates,
  * customizable colors, sizes, and other options.
  * With support for dark mode and logo integration.
+ * Enhanced with multiple export formats.
  */
 const QRCodeGenerator = () => {
   // Theme context
@@ -88,7 +97,7 @@ const QRCodeGenerator = () => {
       let effectiveBgColor = bgColor;
       let effectiveFgColor = fgColor;
       
-      // Optional: Adjust QR code for better visibility in dark mode
+      // Adjust QR code for better visibility in dark mode
       // Only adjust if the user hasn't explicitly set custom colors
       if (theme === 'dark' && bgColor === '#ffffff' && fgColor === '#000000') {
         // Swap colors or adjust for better visibility in dark mode
@@ -139,7 +148,7 @@ const QRCodeGenerator = () => {
     }
   };
 
-  // Add logo to QR code - improved version
+  // Add logo to QR code
   const addLogoToQRCode = (qrDataUrl) => {
     if (!svgRef.current) return;
     
@@ -301,7 +310,7 @@ const QRCodeGenerator = () => {
     img.style.maxHeight = '100%';
     img.style.width = `${size}px`;
     img.style.height = `${size}px`;
-    img.style.objectFit = 'contain'; // Ensures aspect ratio is maintained
+    img.style.objectFit = 'contain';
     
     container.appendChild(img);
     svgRef.current.appendChild(container);
@@ -331,7 +340,6 @@ const QRCodeGenerator = () => {
   const handleSelectColorScheme = (newFgColor, newBgColor) => {
     setFgColor(newFgColor);
     setBgColor(newBgColor);
-    // QR code will be automatically updated through the useEffect
   };
   
   // Select template
@@ -354,9 +362,9 @@ const QRCodeGenerator = () => {
     setText(newContent);
   };
   
-  // Download as SVG
-  const downloadSVG = () => {
-    if (!qrInitialized) {
+  // Handle export based on format selection
+  const handleExport = async (format) => {
+    if (!qrInitialized || !qrDataRef.current) {
       setError("QR code is not fully initialized.");
       return;
     }
@@ -377,8 +385,8 @@ const QRCodeGenerator = () => {
         effectiveFgColor = '#ffffff';
       }
       
-      // Call SVG generator
-      downloadQRCodeAsSVG({
+      // Prepare common export options
+      const exportOptions = {
         text: text || 'https://example.com',
         size: size,
         fgColor: effectiveFgColor,
@@ -391,53 +399,51 @@ const QRCodeGenerator = () => {
         logoBackground: logoBackground,
         useCustomBackground: useCustomBackground,
         logoType: logoType,
-        logoSvgContent: logoSvgContent
-      })
-        .then(() => {
-          setSuccessMessage('SVG successfully downloaded!');
-          setTimeout(() => setSuccessMessage(''), 2000);
-          setLoading(false);
-        })
-        .catch(err => {
-          console.error("Error during SVG download:", err);
-          setError("SVG could not be downloaded: " + (err.message || 'Unknown error'));
-          setLoading(false);
-        });
-    } catch (err) {
-      console.error("Error preparing SVG download:", err);
-      setError("SVG download failed: " + (err.message || 'Unknown error'));
-      setLoading(false);
-    }
-  };
-  
-  // Download as PNG
-  const downloadPNG = () => {
-    if (!qrDataRef.current) {
-      setError("No QR code available for download.");
-      console.error("qrDataRef.current is not initialized");
-      return;
-    }
-    
-    if (!qrDataRef.current.dataUrl) {
-      setError("No QR code data available.");
-      console.error("qrDataRef.current.dataUrl is not available");
-      return;
-    }
-    
-    try {
-      // Direct download of PNG, regardless of cornerRadius
-      const downloadLink = document.createElement('a');
-      downloadLink.href = qrDataRef.current.dataUrl;
-      downloadLink.download = 'qrcode.png';
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
+        logoSvgContent: logoSvgContent,
+        qrDataUrl: qrDataRef.current.dataUrl
+      };
       
-      setSuccessMessage('PNG successfully downloaded!');
-      setTimeout(() => setSuccessMessage(''), 2000);
+      // Handle export based on format
+      let success = false;
+      
+      switch (format) {
+        case 'svg':
+          success = await exportAsSVG(exportOptions);
+          break;
+        case 'png':
+          success = await exportAsPNG(exportOptions);
+          break;
+        case 'jpeg':
+          success = await exportAsJPEG(exportOptions);
+          break;
+        case 'webp':
+          success = await exportAsWebP(exportOptions);
+          break;
+        case 'pdf':
+          success = await exportAsPDF(exportOptions);
+          break;
+        case 'html':
+          success = await exportAsHTMLSnippet(exportOptions);
+          break;
+        case 'dataurl':
+          success = await exportAsDataURL(exportOptions);
+          break;
+        case 'clipboard':
+          success = await copyDataURLToClipboard(exportOptions);
+          break;
+        default:
+          throw new Error(`Unsupported export format: ${format}`);
+      }
+      
+      if (success) {
+        setSuccessMessage(`${format.toUpperCase()} export successful!`);
+        setTimeout(() => setSuccessMessage(''), 2000);
+      }
     } catch (err) {
-      console.error("Error during PNG download:", err);
-      setError("PNG could not be downloaded: " + err.message);
+      console.error(`Error during ${format} export:`, err);
+      setError(`${format.toUpperCase()} export failed: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -638,28 +644,13 @@ const QRCodeGenerator = () => {
             </TabsContent>
           </Tabs>
           
-          {/* Download options - always visible */}
+          {/* Enhanced Export options */}
           <div className="pt-4 border-t mt-4 dark:border-gray-700">
-            <div className="grid grid-cols-2 gap-2">
-              <Button 
-                onClick={downloadSVG} 
-                className="w-full" 
-                disabled={loading || !qrInitialized}
-              >
-                <Download className="w-4 h-4 mr-2" />
-                SVG
-              </Button>
-              <Button 
-                onClick={downloadPNG} 
-                className="w-full" 
-                disabled={loading || !qrInitialized}
-              >
-                <Download className="w-4 h-4 mr-2" />
-                PNG
-              </Button>
-            </div>
-          </div>
-          
+            <TabbedExportPanel 
+              onExport={handleExport}
+              disabled={loading || !qrInitialized}
+            />
+          </div>   
           {/* Error and success messages */}
           {error && (
             <div className="p-3 rounded bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300 text-sm">
