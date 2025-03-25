@@ -7,7 +7,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { AccessibilityProvider } from './context/AccessibilityContext';
 import './styles/accessibility.css';
 
-const APP_VERSION = '1.7.0';
+const APP_VERSION = '1.8.1';
 
 function App() {
   return (

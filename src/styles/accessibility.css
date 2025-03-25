@@ -4,195 +4,347 @@
 
 /* Base font size adjustments */
 .text-size-small {
-    --font-size-base: 0.875rem;
-    --font-size-sm: 0.75rem; 
-    --font-size-lg: 1rem;
-    --font-size-xl: 1.125rem;
-    --font-size-2xl: 1.25rem;
-    --font-size-3xl: 1.5rem;
-  }
+  --font-size-base: 0.875rem;
+  --font-size-sm: 0.75rem; 
+  --font-size-lg: 1rem;
+  --font-size-xl: 1.125rem;
+  --font-size-2xl: 1.25rem;
+  --font-size-3xl: 1.5rem;
+}
+
+.text-size-medium {
+  --font-size-base: 1rem;
+  --font-size-sm: 0.875rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+}
+
+.text-size-large {
+  --font-size-base: 1.125rem;
+  --font-size-sm: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 1.875rem;
+  --font-size-3xl: 2.25rem;
+}
+
+.text-size-x-large {
+  --font-size-base: 1.25rem;
+  --font-size-sm: 1.125rem;
+  --font-size-lg: 1.5rem;
+  --font-size-xl: 1.875rem;
+  --font-size-2xl: 2.25rem;
+  --font-size-3xl: 2.5rem;
+}
+
+/* Apply font size variables */
+html {
+  font-size: var(--font-size-base, 1rem);
+}
+
+.text-sm {
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+.text-base {
+  font-size: var(--font-size-base, 1rem);
+}
+
+.text-lg {
+  font-size: var(--font-size-lg, 1.125rem);
+}
+
+.text-xl {
+  font-size: var(--font-size-xl, 1.25rem);
+}
+
+.text-2xl {
+  font-size: var(--font-size-2xl, 1.5rem);
+}
+
+.text-3xl {
+  font-size: var(--font-size-3xl, 1.875rem);
+}
+
+/* Enhanced High Contrast Mode - Light Theme */
+html.high-contrast {
+  /* Core colors with stronger contrast */
+  --background: 0 0% 100% !important;
+  --foreground: 0 0% 0% !important;
   
-  .text-size-medium {
-    --font-size-base: 1rem;
-    --font-size-sm: 0.875rem;
-    --font-size-lg: 1.125rem;
-    --font-size-xl: 1.25rem;
-    --font-size-2xl: 1.5rem;
-    --font-size-3xl: 1.875rem;
-  }
+  /* Card with visible border */
+  --card: 0 0% 100% !important;
+  --card-foreground: 0 0% 0% !important;
   
-  .text-size-large {
-    --font-size-base: 1.125rem;
-    --font-size-sm: 1rem;
-    --font-size-lg: 1.25rem;
-    --font-size-xl: 1.5rem;
-    --font-size-2xl: 1.875rem;
-    --font-size-3xl: 2.25rem;
-  }
+  --popover: 0 0% 100% !important;
+  --popover-foreground: 0 0% 0% !important;
   
-  .text-size-x-large {
-    --font-size-base: 1.25rem;
-    --font-size-sm: 1.125rem;
-    --font-size-lg: 1.5rem;
-    --font-size-xl: 1.875rem;
-    --font-size-2xl: 2.25rem;
-    --font-size-3xl: 2.5rem;
-  }
+  /* Primary colors with higher contrast - royal blue */
+  --primary: 225 100% 40% !important;
+  --primary-foreground: 0 0% 100% !important;
   
-  /* Apply font size variables */
-  html {
-    font-size: var(--font-size-base, 1rem);
-  }
+  /* Secondary with better distinction */
+  --secondary: 0 0% 90% !important;
+  --secondary-foreground: 0 0% 0% !important;
   
-  .text-sm {
-    font-size: var(--font-size-sm, 0.875rem);
-  }
+  /* Muted but still readable */
+  --muted: 0 0% 85% !important;
+  --muted-foreground: 0 0% 0% !important;
   
-  .text-base {
-    font-size: var(--font-size-base, 1rem);
-  }
+  /* Accent stands out more */
+  --accent: 260 100% 50% !important;
+  --accent-foreground: 0 0% 100% !important;
   
-  .text-lg {
-    font-size: var(--font-size-lg, 1.125rem);
-  }
+  /* Destructive is bright red */
+  --destructive: 0 100% 45% !important;
+  --destructive-foreground: 0 0% 100% !important;
   
-  .text-xl {
-    font-size: var(--font-size-xl, 1.25rem);
-  }
+  /* Stronger borders */
+  --border: 0 0% 0% !important;
+  --input: 0 0% 0% !important;
+  --ring: 225 100% 40% !important;
   
-  .text-2xl {
-    font-size: var(--font-size-2xl, 1.5rem);
-  }
+  /* Additional contrast enhancements */
+  --radius: 0.25rem !important; /* Reduced border radius for clearer shapes */
+}
+
+/* Enhanced High Contrast Mode - Dark Theme */
+html.high-contrast.dark {
+  /* Core colors with stronger contrast */
+  --background: 0 0% 0% !important;
+  --foreground: 0 0% 100% !important;
   
-  .text-3xl {
-    font-size: var(--font-size-3xl, 1.875rem);
-  }
+  /* Card with visible border */
+  --card: 0 0% 0% !important;
+  --card-foreground: 0 0% 100% !important;
   
-  /* High contrast mode */
-  .high-contrast {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
-    
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
-    
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
-    
-    --primary: 230 100% 45%;
-    --primary-foreground: 0 0% 100%;
-    
-    --secondary: 0 0% 90%;
-    --secondary-foreground: 0 0% 0%;
-    
-    --muted: 0 0% 90%;
-    --muted-foreground: 0 0% 0%;
-    
-    --accent: 230 100% 45%;
-    --accent-foreground: 0 0% 100%;
-    
-    --destructive: 0 100% 45%;
-    --destructive-foreground: 0 0% 100%;
-    
-    --border: 0 0% 0%;
-    --input: 0 0% 0%;
-    --ring: 230 100% 45%;
-  }
+  --popover: 0 0% 0% !important;
+  --popover-foreground: 0 0% 100% !important;
   
-  .high-contrast.dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    
-    --card: 0 0% 0%;
-    --card-foreground: 0 0% 100%;
-    
-    --popover: 0 0% 0%;
-    --popover-foreground: 0 0% 100%;
-    
-    --primary: 230 100% 60%;
-    --primary-foreground: 0 0% 0%;
-    
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 100%;
-    
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 100%;
-    
-    --accent: 230 100% 60%;
-    --accent-foreground: 0 0% 0%;
-    
-    --destructive: 0 100% 60%;
-    --destructive-foreground: 0 0% 0%;
-    
-    --border: 0 0% 100%;
-    --input: 0 0% 100%;
-    --ring: 230 100% 60%;
-  }
+  /* Primary colors with higher contrast - bright blue */
+  --primary: 210 100% 60% !important;
+  --primary-foreground: 0 0% 0% !important;
   
-  /* High contrast focus styles */
-  .high-contrast :focus-visible {
-    outline: 3px solid hsl(var(--ring));
-    outline-offset: 2px;
-  }
+  /* Secondary with better distinction */
+  --secondary: 0 0% 20% !important;
+  --secondary-foreground: 0 0% 100% !important;
   
-  .high-contrast a:focus,
-  .high-contrast button:focus,
-  .high-contrast input:focus,
-  .high-contrast select:focus,
-  .high-contrast textarea:focus {
-    outline: 3px solid hsl(var(--ring));
-    outline-offset: 2px;
-  }
+  /* Muted but still readable */
+  --muted: 0 0% 25% !important;
+  --muted-foreground: 0 0% 100% !important;
   
-  /* Reduced motion */
-  .reduced-motion * {
-    transition-duration: 0.001ms !important;
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-  }
+  /* Accent stands out more */
+  --accent: 280 100% 70% !important;
+  --accent-foreground: 0 0% 0% !important;
   
-  /* Focus visibility */
-  :focus:not(:focus-visible) {
-    outline: none;
-  }
+  /* Destructive is bright red */
+  --destructive: 0 100% 60% !important;
+  --destructive-foreground: 0 0% 0% !important;
   
-  /* Utility classes for screen readers */
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
+  /* Stronger borders */
+  --border: 0 0% 100% !important;
+  --input: 0 0% 100% !important;
+  --ring: 210 100% 60% !important;
+}
+
+/* Additional high contrast enhancements */
+html.high-contrast * {
+  /* Enhance text readability */
+  text-shadow: none !important;
   
-  .not-sr-only {
-    position: static;
-    width: auto;
-    height: auto;
-    padding: 0;
-    margin: 0;
-    overflow: visible;
-    clip: auto;
-    white-space: normal;
-  }
-  
-  /* Skip link for keyboard navigation */
-  .skip-link {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    left: 50%;
-    padding: 8px;
-    position: absolute;
-    transform: translateY(-100%);
-    transition: transform 0.3s;
-    z-index: 100;
-  }
-  
-  .skip-link:focus {
-    transform: translateY(0%);
-  }
+  /* Ensure all transitions are removed for clarity */
+  transition-property: none !important;
+}
+
+/* Add explicit borders to cards and interactive elements */
+html.high-contrast .card,
+html.high-contrast button,
+html.high-contrast input,
+html.high-contrast select,
+html.high-contrast textarea {
+  border: 2px solid currentColor !important;
+  box-shadow: none !important;
+}
+
+/* Stronger focus indicators */
+html.high-contrast *:focus-visible {
+  outline: 3px solid hsl(var(--primary)) !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--primary)) !important;
+}
+
+/* Enhanced contrast for links */
+html.high-contrast a {
+  text-decoration: underline !important;
+  text-decoration-thickness: 2px !important;
+  text-underline-offset: 3px !important;
+}
+
+/* Better contrast for buttons in high contrast mode */
+html.high-contrast button,
+html.high-contrast .button {
+  border: 2px solid currentColor !important;
+}
+
+/* Ghost buttons need extra treatment to be visible */
+html.high-contrast button[class*="ghost"],
+html.high-contrast .button[class*="ghost"] {
+  border: 2px solid hsl(var(--foreground)) !important;
+  background-color: transparent !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Make sure check boxes, radio buttons, and other form controls are clearly visible */
+html.high-contrast input[type="checkbox"],
+html.high-contrast input[type="radio"] {
+  border: 2px solid currentColor !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Enhance QR code visibility in high contrast mode */
+html.high-contrast #qr-code-container {
+  padding: 16px !important;
+  border: 3px solid hsl(var(--foreground)) !important;
+}
+
+/* Differentiate selected and non-selected states clearly */
+html.high-contrast [aria-selected="true"],
+html.high-contrast [data-state="checked"],
+html.high-contrast [aria-checked="true"] {
+  border: 3px solid hsl(var(--primary)) !important;
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+/* Better visibility for tabs */
+html.high-contrast [role="tab"] {
+  border: 2px solid transparent !important;
+}
+
+html.high-contrast [role="tab"][aria-selected="true"] {
+  border-color: currentColor !important;
+  font-weight: bold !important;
+}
+
+/* Make sure icons are visible */
+html.high-contrast svg {
+  color: currentColor !important;
+}
+
+/* Improved headings for better structure recognition */
+html.high-contrast h1,
+html.high-contrast h2,
+html.high-contrast h3,
+html.high-contrast h4,
+html.high-contrast h5,
+html.high-contrast h6 {
+  margin-top: 1em !important;
+  margin-bottom: 0.5em !important;
+  font-weight: bold !important;
+}
+
+/* Add extra visual indicator for errors */
+html.high-contrast [aria-invalid="true"] {
+  border-color: hsl(var(--destructive)) !important;
+  border-width: 3px !important;
+}
+
+/* Enhanced contrast for success and error messages */
+html.high-contrast .success-message {
+  background-color: #006600 !important;
+  color: white !important;
+  border: 2px solid white !important;
+  padding: 10px !important;
+}
+
+html.high-contrast .error-message {
+  background-color: hsl(var(--destructive)) !important;
+  color: white !important;
+  border: 2px solid white !important;
+  padding: 10px !important;
+}
+
+/* Ensure disabled elements remain visible but clearly different */
+html.high-contrast [disabled],
+html.high-contrast [aria-disabled="true"] {
+  opacity: 0.7 !important;
+  border-style: dashed !important;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 5px,
+    rgba(127, 127, 127, 0.2) 5px,
+    rgba(127, 127, 127, 0.2) 10px
+  ) !important;
+}
+
+/* High contrast focus styles */
+.high-contrast :focus-visible {
+  outline: 3px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+.high-contrast a:focus,
+.high-contrast button:focus,
+.high-contrast input:focus,
+.high-contrast select:focus,
+.high-contrast textarea:focus {
+  outline: 3px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+.reduced-motion * {
+  transition-duration: 0.001ms !important;
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+}
+
+/* Focus visibility */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Utility classes for screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.not-sr-only {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Skip link for keyboard navigation */
+.skip-link {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  left: 50%;
+  padding: 8px;
+  position: absolute;
+  transform: translateY(-100%);
+  transition: transform 0.3s;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  transform: translateY(0%);
+}

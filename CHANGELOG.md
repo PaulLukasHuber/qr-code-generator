@@ -19,6 +19,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - QR code generation history
 - Multiple language support
 
+## [1.8.1] - 2025-03-25
+### Fixed
+- High contrast mode now properly applies styling throughout the application
+- Resolved CSS specificity issues that prevented high contrast mode from working
+- Fixed SVG icon rendering in high contrast mode to maintain visibility without distortion
+- Enhanced focus visibility in high contrast mode for better keyboard navigation
+- Added appropriate borders and visual cues for interactive elements in high contrast mode
+
+### Added
+- Visual patterns to differentiate disabled elements in high contrast mode
+- Improved form control visibility with stronger borders and clear states
+- Underlined links for better identification in high contrast mode
+
+## [1.8.0] - 2025-03-24
+### Added
+- Comprehensive accessibility infrastructure including:
+  - Accessibility context provider for managing user preferences
+  - High contrast mode toggle
+  - Font size controls with small, medium, large, and extra-large options
+  - Reduced motion setting for users with motion sensitivity
+  - Keyboard shortcut system with reference panel (Alt+/)
+  - Skip to content links for keyboard users
+  - ARIA attributes and semantic HTML enhancements
+  - Screen reader announcements for dynamic content
+  - Enhanced focus management for keyboard navigation
+  - AccessibleQRPreview component for better screen reader support
+  - Detailed accessibility documentation (ACCESSIBILITY.md)
+
 ## [1.7.0] - 2025-03-24
 
 ### Added

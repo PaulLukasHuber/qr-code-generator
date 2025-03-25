@@ -55,12 +55,25 @@ export function AccessibilityProvider({ children }) {
     
     if (highContrast) {
       root.classList.add('high-contrast');
+      // For debugging
+      console.log('Applied high contrast mode');
     } else {
       root.classList.remove('high-contrast');
+      // For debugging
+      console.log('Removed high contrast mode');
     }
     
     localStorage.setItem('highContrast', highContrast ? 'true' : 'false');
   }, [highContrast]);
+
+  useEffect(() => {
+    // Check localStorage for saved preference
+    const savedHighContrast = localStorage.getItem('highContrast');
+    
+    if (savedHighContrast === 'true') {
+      setHighContrast(true);
+    }
+  }, []);
 
   // Apply font size
   useEffect(() => {
