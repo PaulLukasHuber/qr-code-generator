@@ -462,6 +462,8 @@ const QRCodeGenerator = () => {
                 active={activeTab === 'templates'} 
                 onClick={() => setActiveTab('templates')}
                 className="dark:text-gray-300 dark:hover:text-gray-100"
+                data-tab-name="templates"
+                aria-controls="templates-tab-content"
               >
                 <FileCode className="w-4 h-4 mr-2" />
                 Templates
@@ -470,6 +472,8 @@ const QRCodeGenerator = () => {
                 active={activeTab === 'content'} 
                 onClick={() => setActiveTab('content')}
                 className="dark:text-gray-300 dark:hover:text-gray-100"
+                data-tab-name="content"
+                aria-controls="content-tab-content"
               >
                 <ImageIcon className="w-4 h-4 mr-2" />
                 Content
@@ -478,6 +482,8 @@ const QRCodeGenerator = () => {
                 active={activeTab === 'design'} 
                 onClick={() => setActiveTab('design')}
                 className="dark:text-gray-300 dark:hover:text-gray-100"
+                data-tab-name="design"
+                aria-controls="design-tab-content"
               >
                 <Palette className="w-4 h-4 mr-2" />
                 Design
@@ -486,6 +492,8 @@ const QRCodeGenerator = () => {
                 active={activeTab === 'settings'} 
                 onClick={() => setActiveTab('settings')}
                 className="dark:text-gray-300 dark:hover:text-gray-100"
+                data-tab-name="settings"
+                aria-controls="settings-tab-content"
               >
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
@@ -493,7 +501,7 @@ const QRCodeGenerator = () => {
             </TabsList>
             
             {/* Templates Tab */}
-            <TabsContent active={activeTab === 'templates'}>
+            <TabsContent id="templates-tab-content" active={activeTab === 'templates'}  >
               <div className="space-y-4 pt-4">
                 <QRCodeTemplates onSelectTemplate={handleSelectTemplate} />
                 <div className="pt-2 mt-2 border-t dark:border-gray-700">
@@ -505,7 +513,7 @@ const QRCodeGenerator = () => {
             </TabsContent>
             
             {/* Content Tab */}
-            <TabsContent active={activeTab === 'content'}>
+            <TabsContent id="content-tab-content" active={activeTab === 'content'}>
               <div className="space-y-4 pt-4">
                 {activeTemplateId ? (
                   // Structured form fields for templates
@@ -545,7 +553,7 @@ const QRCodeGenerator = () => {
             </TabsContent>
             
             {/* Design Tab */}
-            <TabsContent active={activeTab === 'design'}>
+            <TabsContent id="design-tab-content" active={activeTab === 'design'}>
               <div className="space-y-6 pt-4">
                 {/* Color scheme selection */}
                 <ColorSchemeSelector onSelectScheme={handleSelectColorScheme} />
@@ -619,7 +627,7 @@ const QRCodeGenerator = () => {
             </TabsContent>
             
             {/* Settings Tab */}
-            <TabsContent active={activeTab === 'settings'}>
+            <TabsContent id="settings-tab-content" active={activeTab === 'settings'}>
               <div className="space-y-4 pt-4">
                 <div className="space-y-2">
                   <Label htmlFor="size" className="dark:text-gray-200">Size: {size}px</Label>
@@ -679,6 +687,7 @@ const QRCodeGenerator = () => {
           ) : (
             <>
               <div 
+                id="qr-code-container"
                 ref={svgRef} 
                 className="flex items-center justify-center p-4 rounded border border-gray-200 dark:border-gray-700 w-full overflow-hidden"
                 style={{ 

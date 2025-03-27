@@ -92,12 +92,13 @@ const AccessibilityMenu = () => {
         variant="ghost"
         size="icon"
         onClick={toggleMenu}
-        className="rounded-full w-9 h-9 p-0"
+        className="rounded-full w-9 h-9 p-0 relative"
         aria-expanded={isOpen}
         aria-label="Accessibility options"
         title="Accessibility options"
       >
         <Accessibility className="h-5 w-5" />
+        <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-[10px] font-bold px-1 py-0.5 rounded-full">BETA</span>
       </Button>
       
       {isOpen && (

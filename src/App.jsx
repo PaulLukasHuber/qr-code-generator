@@ -3,6 +3,7 @@ import QRCodeGenerator from './components/qr-code/QRCodeGenerator';
 import ThemeToggle from './components/ui/theme-toggle';
 import AccessibilityMenu from './components/ui/accessibility-menu';
 import KeyboardShortcuts from './components/ui/keyboard-shortcuts';
+import AccessibilityBetaBanner from './components/ui/accessibility-beta-banner';
 import { ThemeProvider } from './context/ThemeContext';
 import { AccessibilityProvider } from './context/AccessibilityContext';
 import './styles/accessibility.css';
@@ -49,8 +50,12 @@ function App() {
             </p>
           </footer>
         </div>
+        
+        {/* Accessibility Beta Banner */}
+        <AccessibilityBetaBanner />
       </AccessibilityProvider>
     </ThemeProvider>
   );
 }
+
 export default App;
